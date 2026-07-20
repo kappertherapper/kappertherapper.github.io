@@ -1,38 +1,707 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>The Wrong Way Out</title>
-    <style>
-        body {
-            background-color: slategrey;
-            color: #00ff00;
-            font-family: 'Courier New', monospace;
-            text-align: center;
-            padding: 50px;
-        }
-        h1 {
-            font-size: 3em;
-            animation: blink 1s infinite;
-        }
-        @keyframes blink {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-        .code {
-            font-size: 2em;
-            margin-top: 30px;
-            border: 2px dashed #00ff00;
-            padding: 20px;
-            display: inline-block;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>kasper er sej</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --lavender:#E9E1F7;
+    --blush:#FBDEE6;
+    --mint:#D9F2E6;
+    --butter:#FFF2C6;
+    --sky:#DCEBFB;
+    --plum:#4B3F63;
+    --plum-soft:#6E6086;
+    --periwinkle:#A9BEF5;
+    --white:#FFFDFB;
+
+    /* window chrome, driven from the palette above */
+    --chrome:#FFFDFB;
+    --chrome-stripe:#F1EBFB;
+    --ink:#4B3F63;
+    --ink-soft:#6E6086;
+    --accent:#A9BEF5;
+    --accent-strong:#7C99E8;
+    --paper:#FFFDFB;
+    --shadow: rgba(75,63,99,0.18);
+    --system-font:'Fredoka', sans-serif;
+    --body-font:'Quicksand', sans-serif;
+  }
+
+  html.hacker{
+    --lavender:#0d1410;
+    --blush:#0d1410;
+    --mint:#0d1410;
+    --butter:#0d1410;
+    --sky:#0d1410;
+    --plum:#39ff8f;
+    --plum-soft:#2fce74;
+    --periwinkle:#39ff8f;
+    --white:#0f1713;
+
+    --chrome:#0f1713;
+    --chrome-stripe:#132018;
+    --ink:#39ff8f;
+    --ink-soft:#2fce74;
+    --accent:#39ff8f;
+    --accent-strong:#1fae63;
+    --paper:#0c110d;
+    --shadow: rgba(57,255,143,0.25);
+    --system-font:'Space Mono', monospace;
+    --body-font:'Space Mono', monospace;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    margin:0; padding:0; height:100vh; width:100vw;
+    overflow:hidden;
+    font-family:var(--body-font);
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 15% 20%, var(--blush) 0%, transparent 45%),
+      radial-gradient(circle at 85% 10%, var(--sky) 0%, transparent 40%),
+      radial-gradient(circle at 75% 80%, var(--mint) 0%, transparent 45%),
+      radial-gradient(circle at 10% 85%, var(--butter) 0%, transparent 40%),
+      var(--lavender);
+    background-attachment:fixed;
+    transition:background 0.4s ease, color 0.4s ease;
+  }
+  html.hacker body{ background: var(--lavender); }
+
+  a{ color:inherit; }
+
+  /* ===== floating clouds (hidden in hacker mode) ===== */
+  .cloud{
+    position:fixed; background:var(--white); border-radius:50%;
+    opacity:0.55; filter:blur(1px); z-index:0; animation:drift 22s ease-in-out infinite;
+    transition:opacity 0.3s ease;
+  }
+  html.hacker .cloud{ opacity:0; }
+  .cloud::before, .cloud::after{ content:""; position:absolute; background:var(--white); border-radius:50%; }
+  .c1{ width:140px; height:60px; top:8%; left:6%; animation-duration:26s; }
+  .c1::before{ width:80px; height:80px; top:-40px; left:15px; }
+  .c1::after{ width:60px; height:60px; top:-25px; left:70px; }
+  .c2{ width:110px; height:46px; top:65%; left:82%; animation-duration:19s; animation-delay:2s; }
+  .c2::before{ width:60px; height:60px; top:-30px; left:10px; }
+  .c2::after{ width:46px; height:46px; top:-18px; left:55px; }
+  .c3{ width:90px; height:38px; top:30%; left:88%; animation-duration:24s; animation-delay:4s; opacity:0.4;}
+  .c3::before{ width:50px; height:50px; top:-25px; left:8px; }
+  .c3::after{ width:36px; height:36px; top:-14px; left:44px; }
+  .c4{ width:100px; height:42px; top:85%; left:12%; animation-duration:21s; animation-delay:1s; opacity:0.45;}
+  .c4::before{ width:55px; height:55px; top:-28px; left:8px; }
+  .c4::after{ width:40px; height:40px; top:-16px; left:48px; }
+  @keyframes drift{ 0%,100%{ transform:translateY(0) translateX(0);} 50%{ transform:translateY(-18px) translateX(12px);} }
+  @media (prefers-reduced-motion: reduce){ .cloud{ animation:none; } html{ scroll-behavior:auto; } }
+
+  h1,h2,h3{ font-family:var(--system-font); margin:0; font-weight:600; }
+
+  #desktop{ position:relative; width:100%; height:100%; padding-top:30px; }
+
+  /* ===== MENU BAR ===== */
+  #menubar{
+    position:fixed; top:0; left:0; right:0; height:30px;
+    background:var(--chrome);
+    border-bottom:2px solid var(--ink);
+    display:flex; align-items:center;
+    z-index:5000; font-family:var(--system-font); font-size:13px;
+    user-select:none;
+  }
+  #menubar .brand{ padding:0 16px; height:100%; display:flex; align-items:center; gap:8px; font-weight:600; color:var(--ink); }
+  #menubar .brand .dot{ width:9px; height:9px; border-radius:50%; background:var(--accent-strong); }
+  .menu-item{ position:relative; padding:0 13px; height:100%; display:flex; align-items:center; cursor:pointer; color:var(--ink-soft); }
+  .menu-item:hover, .menu-item.open{ background:var(--accent); color:var(--white); }
+  html.hacker .menu-item:hover, html.hacker .menu-item.open{ color:#08120c; }
+  .menu-dropdown{
+    display:none; position:absolute; top:30px; left:0;
+    background:var(--chrome); border:2px solid var(--ink); border-radius:0 0 12px 12px;
+    min-width:210px; box-shadow:0 10px 24px var(--shadow); font-family:var(--body-font); font-size:13px; z-index:6000;
+    overflow:hidden;
+  }
+  .menu-item.open .menu-dropdown{ display:block; }
+  .menu-dropdown .row{ display:flex; justify-content:space-between; padding:9px 14px; color:var(--ink); cursor:pointer; }
+  .menu-dropdown .row:hover{ background:var(--accent); color:var(--white); }
+  html.hacker .menu-dropdown .row:hover{ color:#08120c; }
+  .menu-dropdown .sep{ height:1px; background:var(--chrome-stripe); margin:2px 0; }
+  .menu-dropdown .kbd{ opacity:0.55; margin-left:14px; font-size:11px; }
+  #menubar .right{ margin-left:auto; display:flex; align-items:center; gap:14px; padding-right:16px; }
+  #clock{ font-family:var(--system-font); font-size:12px; color:var(--ink-soft); }
+
+  /* ===== profile button (top right) ===== */
+  .menu-item.profile{ padding:0 12px; }
+  .menu-item.profile:hover, .menu-item.profile.open{ background:transparent; }
+  .profile-btn{
+    width:24px; height:24px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px;
+    transition:transform 0.15s ease;
+  }
+  .menu-item.profile:hover .profile-btn, .menu-item.profile.open .profile-btn{ transform:scale(1.1); }
+  .menu-item.profile .menu-dropdown{ left:0; min-width:230px; }
+  .menu-item.profile .menu-dropdown .row.highlight{
+    background:var(--accent); color:var(--white); font-weight:600;
+  }
+  html.hacker .menu-item.profile .menu-dropdown .row.highlight{ color:#08120c; }
+
+  /* ===== DESKTOP ICONS ===== */
+  #icons{
+    position:absolute; top:30px; right:0; bottom:0;
+    display:flex; flex-direction:column; flex-wrap:wrap; align-content:flex-end;
+    gap:4px; padding:20px;
+  }
+  .icon{ width:96px; padding:10px 4px; text-align:center; cursor:grab; user-select:none; border-radius:14px; }
+  .icon.dragging{ cursor:grabbing; opacity:0.85; }
+  .icon:hover{ background:rgba(255,255,255,0.35); }
+  html.hacker .icon:hover{ background:rgba(57,255,143,0.08); }
+  .icon.selected{ background:rgba(255,255,255,0.55); }
+  html.hacker .icon.selected{ background:rgba(57,255,143,0.14); }
+  .icon .glyph{
+    width:52px; height:44px; margin:0 auto 6px; display:flex; align-items:center; justify-content:center;
+    font-size:28px; background:var(--white); border-radius:16px; box-shadow:0 6px 14px var(--shadow);
+  }
+  .icon .label{ font-family:var(--system-font); font-size:11px; color:var(--ink); font-weight:600; line-height:1.3; }
+
+  /* ===== WINDOWS ===== */
+  .win{
+    position:absolute; background:var(--chrome);
+    border:2px solid var(--ink); border-radius:18px;
+    box-shadow:0 18px 40px var(--shadow);
+    min-width:260px; display:none; flex-direction:column; z-index:10; overflow:hidden;
+  }
+  .win.active{ z-index:2000; }
+  .win.open{ display:flex; }
+  .titlebar{
+    height:30px; flex:0 0 auto; display:flex; align-items:center; padding:0 10px;
+    background:var(--chrome-stripe); border-bottom:2px solid var(--ink); cursor:move; user-select:none;
+  }
+  .win:not(.active) .titlebar{ opacity:0.75; }
+  .titlebar .box{ width:13px; height:13px; border-radius:50%; background:var(--accent); margin-right:8px; flex:0 0 auto; cursor:pointer; border:1.5px solid var(--ink); }
+  .titlebar .box:hover{ background:var(--accent-strong); }
+  .titlebar .title{ flex:1; text-align:center; font-family:var(--system-font); font-size:12px; padding-right:21px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--ink); }
+  .win-body{ padding:20px; overflow:auto; background:var(--paper); font-size:14px; line-height:1.65; }
+  .win .resize-handle{
+    position:absolute; right:2px; bottom:2px; width:14px; height:14px; cursor:nwse-resize;
+    background: linear-gradient(135deg, transparent 0 40%, var(--ink-soft) 40% 55%, transparent 55% 60%, var(--ink-soft) 60% 75%, transparent 75% 80%, var(--ink-soft) 80% 95%, transparent 95%);
+    opacity:0.5;
+  }
+
+  .badge{ display:inline-block; background:var(--white); padding:6px 16px; border-radius:999px; font-size:0.82rem; font-weight:600; color:var(--ink-soft); box-shadow:0 6px 16px var(--shadow); margin-bottom:16px; }
+  .hero-name{ font-size:clamp(1.5rem,4vw,2.1rem); line-height:1.2; }
+  .wave{ display:inline-block; animation:wave 2.4s ease-in-out infinite; transform-origin:70% 70%; }
+  @keyframes wave{ 0%,60%,100%{transform:rotate(0deg);} 10%{transform:rotate(14deg);} 20%{transform:rotate(-8deg);} 30%{transform:rotate(14deg);} 40%{transform:rotate(-4deg);} }
+  .sub{ margin-top:10px; font-size:1.02rem; color:var(--ink-soft); line-height:1.6; }
+
+  .pills{ display:flex; flex-wrap:wrap; gap:10px; margin-top:6px; }
+  .pill{ background:var(--white); padding:9px 16px; border-radius:999px; font-size:0.9rem; font-weight:600; color:var(--ink); box-shadow:0 4px 12px var(--shadow); transition:transform 0.2s ease, box-shadow 0.2s ease; display:inline-flex; align-items:center; gap:6px; }
+  .pill:hover{ transform:translateY(-3px) rotate(-1deg); box-shadow:0 8px 18px var(--shadow); }
+  .pill.p1{ background:var(--blush); } .pill.p2{ background:var(--mint); } .pill.p3{ background:var(--sky); }
+  .pill.p4{ background:var(--butter); } .pill.p5{ background:var(--lavender); }
+  html.hacker .pill{ background:var(--paper); border:1px solid var(--ink-soft); }
+
+  .project{ padding:14px 0; border-bottom:1px dashed var(--chrome-stripe); }
+  .project:last-child{ border-bottom:none; }
+  .project h4{ font-family:var(--system-font); font-size:1rem; margin-bottom:4px; }
+  .project p{ margin:0; color:var(--ink-soft); font-size:0.94rem; }
+  .project .tag{ display:inline-block; font-size:0.7rem; font-weight:700; background:var(--mint); color:var(--ink); padding:2px 10px; border-radius:999px; margin-top:6px; }
+  .project-link{
+    display:inline-flex; align-items:center; gap:6px; margin-top:8px;
+    font-family:var(--system-font); font-size:0.8rem; font-weight:600; color:var(--accent-strong);
+    text-decoration:none;
+  }
+  .project-link:hover{ text-decoration:underline; }
+
+  .links{ display:flex; gap:14px; flex-wrap:wrap; margin-top:16px; }
+  .link-btn{
+    text-decoration:none; background:var(--white); padding:12px 22px; border-radius:16px;
+    font-family:var(--system-font); font-weight:500; font-size:0.95rem; color:var(--ink);
+    box-shadow:0 8px 18px var(--shadow); transition:transform 0.2s cubic-bezier(.34,1.56,.64,1), box-shadow 0.2s ease;
+    display:inline-flex; align-items:center; gap:8px; border:2px solid transparent;
+  }
+  .link-btn:hover{ transform:translateY(-3px) scale(1.02); border-color:var(--accent); }
+
+  .btn{
+    font-family:var(--system-font); font-size:12px; font-weight:600;
+    background:var(--accent); color:var(--white); border:none; border-radius:12px;
+    padding:9px 18px; cursor:pointer; box-shadow:0 6px 14px var(--shadow);
+  }
+  html.hacker .btn{ color:#08120c; }
+  .btn:hover{ background:var(--accent-strong); }
+  .btn.ghost{ background:var(--white); color:var(--ink); }
+
+  .field{ margin-bottom:12px; display:flex; flex-direction:column; gap:5px; }
+  .field label{ font-family:var(--system-font); font-size:0.72rem; letter-spacing:0.03em; color:var(--ink-soft); }
+  .field input, .field textarea{
+    font-family:var(--body-font); font-size:0.92rem; padding:9px 12px;
+    border:1.5px solid var(--chrome-stripe); border-radius:10px; background:var(--white); color:var(--ink);
+    resize:vertical;
+  }
+  .field input:focus, .field textarea:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  .dialog-icon{ font-size:30px; margin-bottom:8px; text-align:center; }
+  .win.dialog .win-body{ text-align:center; }
+  .dialog-actions{ display:flex; gap:10px; justify-content:center; margin-top:16px; }
+
+  footer.sig{ margin-top:6px; color:var(--ink-soft); font-size:0.85rem; opacity:0.85; }
+  footer.sig .heart{ color:#f2a8b8; }
+  html.hacker footer.sig .heart{ color:var(--ink); }
+
+  ::-webkit-scrollbar{ width:14px; height:14px; }
+  ::-webkit-scrollbar-track{ background:transparent; }
+  ::-webkit-scrollbar-thumb{ background:var(--accent); border-radius:8px; border:3px solid var(--chrome); }
+
+  @media (max-width:720px){
+    .win{ width:90vw !important; left:5vw !important; min-width:0; }
+    #icons{ right:0; left:0; align-content:flex-start; flex-direction:row; flex-wrap:wrap; justify-content:flex-end; }
+  }
+</style>
 </head>
 <body>
-    <h1>⚠️ YOU STUPID BITCH ⚠️</h1>
-    <p>Never, ever, EVER scan unknown qr code.. Escape code:</p>
-    <div class="code">4321</div>
-    <p>Do not share this code with anyone.</p>
-    <p style="font-size: 0.8em; margin-top: 50px;">now see if you can solve the next puzzle.</p>
+
+<div class="cloud c1"></div>
+<div class="cloud c2"></div>
+<div class="cloud c3"></div>
+<div class="cloud c4"></div>
+
+<div id="menubar">
+  <div class="menu-item profile" data-menu="profile">
+    <div class="profile-btn">🍐</div>
+    <div class="menu-dropdown">
+      <div class="row highlight" data-open="about">About Kasper Jonassen…</div>
+      <div class="sep"></div>
+      <div class="row" id="toggle-hacker">Hacker Mode</div>
+      <div class="sep"></div>
+      <div class="row" id="restart-row">Restart</div>
+      <div class="row" id="shutdown-row">Shut Down</div>
+    </div>
+  </div>
+  <div class="menu-item" data-menu="file">File
+    <div class="menu-dropdown">
+      <div class="row" id="new-text-window">Open Text Window… <span class="kbd">⌘T</span></div>
+      <div class="row" data-close-active="1">Close Window <span class="kbd">⌘W</span></div>
+      <div class="row" id="close-all">Close All Windows</div>
+      <div class="sep"></div>
+      <div class="row" id="quit-row">Quit <span class="kbd">⌘Q</span></div>
+    </div>
+  </div>
+  <div class="menu-item" data-menu="view">View
+    <div class="menu-dropdown">
+      <div class="row" id="reset-layout">Reset Window Layout</div>
+      <div class="sep"></div>
+      <div class="row" id="zoom-in">Zoom In <span class="kbd">⌘+</span></div>
+      <div class="row" id="zoom-out">Zoom Out <span class="kbd">⌘-</span></div>
+      <div class="row" id="zoom-actual">Actual Size <span class="kbd">⌘0</span></div>
+    </div>
+  </div>
+  <div class="menu-item" data-menu="help">Help
+    <div class="menu-dropdown">
+      <div class="row" data-open="socials">Socials</div>
+    </div>
+  </div>
+  <div class="right">
+    <span id="clock">--:--</span>
+  </div>
+</div>
+
+<div id="desktop">
+  <div id="icons">
+    <div class="icon" data-open="about"><div class="glyph">🙋🏼‍♂️</div><div class="label">About Me</div></div>
+    <div class="icon" data-open="skills"><div class="glyph">🔐</div><div class="label">Skills</div></div>
+    <div class="icon" data-open="projects"><div class="glyph">💻</div><div class="label">Projects</div></div>
+    <div class="icon" data-open="contact"><div class="glyph">✉️</div><div class="label">Contact</div></div>
+    <div class="icon" data-open="warning"><div class="glyph">🗑</div><div class="label">Trash</div></div>
+  </div>
+
+  <!-- ABOUT WINDOW -->
+  <div class="win open" id="win-about" data-x="6" data-y="10" style="left:6%; top:10%; width:440px;">
+    <div class="titlebar"><div class="box" data-close="about"></div><div class="title">About Me</div></div>
+    <div class="win-body">
+      <h1 class="hero-name">Hi, I'm Kasper <span class="wave">👋🏼</span></h1>
+      <p class="sub">Computer science grad, becoming a security nerd.</p>
+      <p class="sub">I studied computer science at EAAA in Aarhus and spend my time somewhere between building things, learning objects, figuring out databases, etc.</p>
+      <p class="sub">Now I'm all in on cyber security and trying to learn something new every day!</p>
+      <span class="badge">📍 Copenhagen, Denmark</span>
+    </div>
+    <div class="resize-handle"></div>
+  </div>
+
+  <!-- SKILLS WINDOW -->
+  <div class="win" id="win-skills" data-x="46" data-y="16" style="left:46%; top:16%; width:380px;">
+    <div class="titlebar"><div class="box" data-close="skills"></div><div class="title">Skills</div></div>
+    <div class="win-body">
+      <div class="pills">
+        <span class="pill p1">Cybersecurity</span>
+        <span class="pill p2">Network</span>
+        <span class="pill p3">Software Development</span>
+        <span class="pill p4">Cryptography</span>
+        <span class="pill p5">Web &amp; backend</span>
+        <span class="pill p3">Phishing Detection</span>
+        <span class="pill p2">🐧</span>
+        <span class="pill p1">Network architecture</span>
+        <span class="pill p2">Endpoint Security</span>
+        <span class="pill p5">Problem Solving</span>
+      </div>
+    </div>
+    <div class="resize-handle"></div>
+  </div>
+
+  <!-- PROJECTS WINDOW -->
+  <div class="win" id="win-projects" data-x="14" data-y="30" style="left:14%; top:30%; width:420px;">
+    <div class="titlebar"><div class="box" data-close="projects"></div><div class="title">Projects</div></div>
+    <div class="win-body">
+      <div class="project">
+        <h4>kasperkluns</h4>
+        <p>A personal sneaker inventory app — built because I'd bought (way) too many shoes and needed to keep track of them.</p>
+        <div><a class="project-link" href="https://github.com/kappertherapper/kasperkluns" target="_blank" rel="noopener">Link</a></div>
+      </div>
+      <div class="project">
+        <h4>bestphishingdetectoreverrr</h4>
+        <p>A lightweight browser extension that detects phishing sites in real time — it analyzes URLs for suspicious patterns and warns you before you land on something malicious.</p>
+        <p><strong>concept!</strong></p>
+        <div><a class="project-link" href="https://github.com/kappertherapper/bestphishingdetectoreverrr" target="_blank" rel="noopener">Link</a></div>
+      </div>
+    </div>
+    <div class="resize-handle"></div>
+  </div>
+
+  <!-- CONTACT WINDOW -->
+  <div class="win" id="win-contact" data-x="30" data-y="46" style="left:30%; top:46%; width:340px;">
+    <div class="titlebar"><div class="box" data-close="contact"></div><div class="title">Contact</div></div>
+    <div class="win-body">
+      <div class="links">
+        <a class="link-btn gh" href="https://github.com/kappertherapper" target="_blank" rel="noopener">GitHub</a>
+        <a class="link-btn li" href="https://www.linkedin.com/in/kasperjonassen" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="link-btn ig" href="https://www.instagram.com/kasperkage/" target="_blank" rel="noopener">Instagram</a>
+        <a class="link-btn ig" href="mailto:kasperjonassen@yahoo.dk">Mail</a>
+      </div>
+    </div>
+    <div class="resize-handle"></div>
+  </div>
+
+  <!-- SOCIALS WINDOW -->
+  <div class="win" id="win-socials" data-x="40" data-y="26" style="left:40%; top:26%; width:260px;">
+    <div class="titlebar"><div class="box" data-close="socials"></div><div class="title">Socials</div></div>
+    <div class="win-body">
+      <p style="margin:4px 0;"><strong>GitHub</strong> — @kappertherapper</p>
+      <p style="margin:4px 0;"><strong>LinkedIn</strong> — kasperjonassen</p>
+      <p style="margin:4px 0;"><strong>Instagram</strong> — @kasperkage</p>
+    </div>
+    <div class="resize-handle"></div>
+  </div>
+
+  <!-- JOKE / TRASH DIALOG -->
+  <div class="win dialog" id="win-warning" data-x="35" data-y="35" style="left:35%; top:35%; width:320px;">
+    <div class="titlebar"><div class="box" data-close="warning"></div><div class="title">⚠ System Warning</div></div>
+    <div class="win-body">
+      <div class="dialog-icon">🔒</div>
+      <p>Access denied. Requires root privileges, sorry :)</p>
+      <div class="dialog-actions"><button class="btn" data-close="warning">OK</button></div>
+    </div>
+  </div>
+
+  <!-- GENERIC ALERT -->
+  <div class="win dialog" id="win-alert" data-x="40" data-y="40" style="left:40%; top:40%; width:280px;">
+    <div class="titlebar"><div class="box" data-close="alert"></div><div class="title">Alert</div></div>
+    <div class="win-body">
+      <p id="alert-text">Are you sure?</p>
+      <div class="dialog-actions"><button class="btn ghost" data-close="alert">OK</button></div>
+    </div>
+  </div>
+  <!-- NEW TEXT WINDOW DIALOG -->
+  <div class="win dialog" id="win-newtext" data-x="32" data-y="32" style="left:32%; top:32%; width:320px;">
+    <div class="titlebar"><div class="box" data-close="newtext"></div><div class="title">New Text Window</div></div>
+    <div class="win-body" style="text-align:left;">
+      <div class="field"><label>TITLE</label><input type="text" id="newtext-title" placeholder="Untitled"></div>
+      <div class="field"><label>TEXT</label><textarea id="newtext-body" placeholder="Write anything…" rows="5"></textarea></div>
+      <div class="dialog-actions">
+        <button class="btn ghost" data-close="newtext">Cancel</button>
+        <button class="btn" id="newtext-create">Create Window</button>
+      </div>
+    </div>
+  </div>
+  <footer class="sig"><span class="heart">♥</span> remember to smile.</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(sel, root){ return (root||document).querySelector(sel); }
+  function $all(sel, root){ return Array.from((root||document).querySelectorAll(sel)); }
+
+  let zTop = 100;
+  let activeWin = "about";
+
+  /* ---------- CLOCK ---------- */
+  function tickClock(){
+    const d = new Date();
+    let h = d.getHours(), m = d.getMinutes();
+    const ampm = h>=12 ? "PM":"AM";
+    h = h%12; if(h===0) h=12;
+    const str = h+":"+String(m).padStart(2,"0")+" "+ampm;
+    $("#clock").textContent = str;
+  }
+  tickClock(); setInterval(tickClock, 1000*15);
+
+  /* ---------- MENU BAR ---------- */
+  $all(".menu-item[data-menu]").forEach(item=>{
+    item.addEventListener("click", e=>{
+      const wasOpen = item.classList.contains("open");
+      $all(".menu-item.open").forEach(m=>m.classList.remove("open"));
+      if(!wasOpen) item.classList.add("open");
+      e.stopPropagation();
+    });
+  });
+  document.addEventListener("click", ()=> $all(".menu-item.open").forEach(m=>m.classList.remove("open")));
+
+  $all(".menu-dropdown .row[data-open]").forEach(row=>{
+    row.addEventListener("click", ()=> openWin(row.dataset.open));
+  });
+  $("#close-all").addEventListener("click", ()=> $all(".win.open").forEach(w=> closeWin(w.id.replace("win-",""))));
+  $all(".menu-dropdown .row[data-close-active]").forEach(row=> row.addEventListener("click", ()=> closeWin(activeWin)));
+  $("#quit-row").addEventListener("click", ()=> showAlert("Nice try — this desktop never quits. It's a website, not an OS."));
+  $("#restart-row").addEventListener("click", ()=> showAlert("Restarting… (just kidding, keep looking around)"));
+  $("#shutdown-row").addEventListener("click", ()=> showAlert("This computer is a website. It cannot be shut down."));
+  $("#reset-layout").addEventListener("click", resetLayout);
+  $("#zoom-in").addEventListener("click", ()=> setZoom(zoomLevel+0.1));
+  $("#zoom-out").addEventListener("click", ()=> setZoom(zoomLevel-0.1));
+  $("#zoom-actual").addEventListener("click", ()=> setZoom(1));
+  $("#toggle-hacker").addEventListener("click", toggleHacker);
+  $("#new-text-window").addEventListener("click", ()=> openWin("newtext"));
+  $("#newtext-create").addEventListener("click", createTextWindow);
+
+  function toggleHacker(){
+    document.documentElement.classList.toggle("hacker");
+  }
+
+  /* ---------- ZOOM ---------- */
+  let zoomLevel = 1;
+  function setZoom(level){
+    zoomLevel = Math.min(1.5, Math.max(0.6, Math.round(level*10)/10));
+    const desktop = $("#desktop");
+    desktop.style.transform = `scale(${zoomLevel})`;
+    desktop.style.transformOrigin = "top left";
+    desktop.style.width = (100/zoomLevel)+"%";
+    desktop.style.height = (100/zoomLevel)+"%";
+  }
+
+  /* ---------- TEXT WINDOWS ---------- */
+  let textWinCount = 0;
+  function createTextWindow(){
+    const titleVal = $("#newtext-title").value.trim() || "Untitled";
+    const bodyVal = $("#newtext-body").value.trim() || "(empty)";
+    textWinCount += 1;
+    const id = "text-"+textWinCount;
+
+    const win = document.createElement("div");
+    win.className = "win open";
+    win.id = "win-"+id;
+    const offset = (textWinCount % 6) * 3;
+    win.style.left = (24+offset)+"%";
+    win.style.top = (24+offset)+"%";
+    win.style.width = "320px";
+    win.innerHTML = `
+      <div class="titlebar"><div class="box" data-close="${id}"></div><div class="title">${escapeHtml(titleVal)}</div></div>
+      <div class="win-body"><p style="white-space:pre-wrap; margin:0;">${escapeHtml(bodyVal)}</p></div>
+      <div class="resize-handle"></div>
+    `;
+    $("#desktop").appendChild(win);
+    win.querySelector("[data-close]").addEventListener("click", ()=> closeWin(id));
+    win.addEventListener("mousedown", ()=> focusWin(id));
+    makeDraggable(win);
+    makeResizable(win);
+
+    $("#newtext-title").value = "";
+    $("#newtext-body").value = "";
+    closeWin("newtext");
+    openWin(id);
+  }
+  function escapeHtml(str){
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  /* ---------- WINDOW MANAGEMENT ---------- */
+  function openWin(name){
+    const win = $("#win-"+name);
+    if(!win) return;
+    win.classList.add("open");
+    win.style.display = "flex";
+    focusWin(name);
+  }
+  function closeWin(name){
+    const win = $("#win-"+name);
+    if(!win) return;
+    win.classList.remove("open");
+    win.style.display = "none";
+  }
+  function focusWin(name){
+    const win = $("#win-"+name);
+    if(!win) return;
+    $all(".win").forEach(w=>w.classList.remove("active"));
+    win.classList.add("active");
+    zTop += 1;
+    win.style.zIndex = zTop;
+    activeWin = name;
+  }
+  function resetLayout(){
+    $all(".win[data-x]").forEach(w=>{
+      w.style.left = w.dataset.x+"%";
+      w.style.top = w.dataset.y+"%";
+    });
+  }
+
+  $all("[data-close]").forEach(el=> el.addEventListener("click", ()=> closeWin(el.dataset.close)));
+  $all(".win").forEach(win=> win.addEventListener("mousedown", ()=> focusWin(win.id.replace("win-",""))));
+
+  /* desktop icons */
+  function initIconDragging(){
+    const icons = $all(".icon");
+    // measure every icon's position BEFORE any of them leave the flex flow —
+    // otherwise removing one shifts the rest and their rects come out wrong
+    const rects = icons.map(icon => icon.getBoundingClientRect());
+
+    icons.forEach((icon, i)=>{
+      const rect = rects[i];
+      icon.style.position = "fixed";
+      icon.style.left = rect.left+"px";
+      icon.style.top = rect.top+"px";
+      icon.style.margin = "0";
+      icon.style.zIndex = "1";
+
+      let dragging=false, moved=false, offX=0, offY=0, startX=0, startY=0;
+
+      icon.addEventListener("mousedown", e=>{
+        dragging = true; moved = false;
+        const r = icon.getBoundingClientRect();
+        offX = e.clientX - r.left; offY = e.clientY - r.top;
+        startX = e.clientX; startY = e.clientY;
+        icon.classList.add("dragging");
+        icon.style.zIndex = "2";
+        e.preventDefault();
+      });
+      window.addEventListener("mousemove", e=>{
+        if(!dragging) return;
+        if(Math.abs(e.clientX-startX) > 4 || Math.abs(e.clientY-startY) > 4) moved = true;
+        icon.style.left = Math.max(0, e.clientX-offX)+"px";
+        icon.style.top = Math.max(30, e.clientY-offY)+"px";
+      });
+      window.addEventListener("mouseup", ()=>{
+        if(!dragging) return;
+        dragging = false;
+        icon.classList.remove("dragging");
+        icon.style.zIndex = "1";
+        if(moved) icon.dataset.justDragged = "1";
+      });
+
+      icon.addEventListener("touchstart", e=>{
+        const t = e.touches[0];
+        dragging = true; moved = false;
+        const r = icon.getBoundingClientRect();
+        offX = t.clientX - r.left; offY = t.clientY - r.top;
+        startX = t.clientX; startY = t.clientY;
+        icon.classList.add("dragging");
+      }, {passive:true});
+      window.addEventListener("touchmove", e=>{
+        if(!dragging) return;
+        const t = e.touches[0];
+        if(Math.abs(t.clientX-startX) > 4 || Math.abs(t.clientY-startY) > 4) moved = true;
+        icon.style.left = Math.max(0, t.clientX-offX)+"px";
+        icon.style.top = Math.max(30, t.clientY-offY)+"px";
+      }, {passive:true});
+      window.addEventListener("touchend", ()=>{
+        if(!dragging) return;
+        dragging = false;
+        icon.classList.remove("dragging");
+        if(moved) icon.dataset.justDragged = "1";
+      });
+    });
+  }
+  initIconDragging();
+
+  $all(".icon[data-open]").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      if(el.dataset.justDragged === "1"){
+        el.dataset.justDragged = "";
+        return;
+      }
+      if(el.classList.contains("icon")){
+        $all(".icon").forEach(i=>i.classList.remove("selected"));
+        el.classList.add("selected");
+      }
+      openWin(el.dataset.open);
+    });
+  });
+
+  /* ---------- ALERT ---------- */
+  function showAlert(text){
+    $("#alert-text").textContent = text;
+    openWin("alert");
+  }
+
+  /* ---------- DRAGGING ---------- */
+  function makeDraggable(win){
+    const bar = win.querySelector(".titlebar");
+    let offX=0, offY=0, dragging=false;
+    bar.addEventListener("mousedown", e=>{
+      if(e.target.classList.contains("box")) return;
+      dragging = true;
+      const rect = win.getBoundingClientRect();
+      offX = e.clientX - rect.left; offY = e.clientY - rect.top;
+      win.style.left = rect.left+"px"; win.style.top = rect.top+"px";
+      focusWin(win.id.replace("win-",""));
+      e.preventDefault();
+    });
+    bar.addEventListener("touchstart", e=>{
+      const t = e.touches[0];
+      dragging = true;
+      const rect = win.getBoundingClientRect();
+      offX = t.clientX - rect.left; offY = t.clientY - rect.top;
+      focusWin(win.id.replace("win-",""));
+    }, {passive:true});
+    window.addEventListener("mousemove", e=>{
+      if(!dragging) return;
+      win.style.left = Math.max(0, e.clientX-offX)+"px";
+      win.style.top = Math.max(30, e.clientY-offY)+"px";
+    });
+    window.addEventListener("touchmove", e=>{
+      if(!dragging) return;
+      const t = e.touches[0];
+      win.style.left = Math.max(0, t.clientX-offX)+"px";
+      win.style.top = Math.max(30, t.clientY-offY)+"px";
+    }, {passive:true});
+    window.addEventListener("mouseup", ()=> dragging=false);
+    window.addEventListener("touchend", ()=> dragging=false);
+  }
+  $all(".win").forEach(makeDraggable);
+
+  /* ---------- RESIZING ---------- */
+  function makeResizable(win){
+    const handle = win.querySelector(".resize-handle");
+    if(!handle) return;
+    let resizing=false, startX,startY,startW,startH;
+    handle.addEventListener("mousedown", e=>{
+      resizing = true;
+      const rect = win.getBoundingClientRect();
+      startX=e.clientX; startY=e.clientY; startW=rect.width; startH=rect.height;
+      e.preventDefault(); e.stopPropagation();
+    });
+    window.addEventListener("mousemove", e=>{
+      if(!resizing) return;
+      win.style.width = Math.max(240, startW + (e.clientX-startX))+"px";
+      win.style.height = Math.max(140, startH + (e.clientY-startY))+"px";
+    });
+    window.addEventListener("mouseup", ()=> resizing=false);
+  }
+  $all(".win").forEach(makeResizable);
+
+  /* ---------- INIT ---------- */
+  focusWin("about");
+})();
+</script>
 </body>
 </html>
