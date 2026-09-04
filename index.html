@@ -156,8 +156,13 @@
 
   /* ===== DESKTOP ICONS ===== */
   #icons{
-    position:absolute; top:30px; right:0; bottom:0;
+    position:absolute; top:100px; right:0; bottom:0;
     display:flex; flex-direction:column; flex-wrap:wrap; align-content:flex-end;
+    gap:4px; padding:20px;
+  }
+  #icons-left{
+    position:absolute; top:200px; left:0; bottom:0;
+    display:flex; flex-direction:column; flex-wrap:wrap; align-content:flex-start;
     gap:4px; padding:20px;
   }
   .icon{ width:96px; padding:10px 4px; text-align:center; cursor:grab; user-select:none; border-radius:14px; }
@@ -264,6 +269,7 @@
   @media (max-width:720px){
     .win{ width:90vw !important; left:5vw !important; min-width:0; }
     #icons{ right:0; left:0; align-content:flex-start; flex-direction:row; flex-wrap:wrap; justify-content:flex-end; }
+    #icons-left{ left:0; right:0; align-content:flex-start; flex-direction:row; flex-wrap:wrap; justify-content:flex-start; bottom:auto; top:auto; }
   }
 </style>
 </head>
@@ -322,6 +328,9 @@
     <div class="icon" data-open="projects"><div class="glyph">💻</div><div class="label">Projects</div></div>
     <div class="icon" data-open="links"><div class="glyph">🔗</div><div class="label">Links</div></div>
     <div class="icon" data-open="cv"><div class="glyph">📄</div><div class="label">CV</div></div>
+  </div>
+  <div id="icons-left">
+    <div class="icon" data-open="translate"><div class="glyph">🌐</div><div class="label">Translate</div></div>
     <div class="icon" data-open="warning"><div class="glyph">🗑</div><div class="label">Trash</div></div>
   </div>
 
@@ -351,6 +360,9 @@
         <span class="pill p5">Business acumen</span>
 
         <span class="pill p3">Software development</span>
+        <span class="pill p3">Python</span>
+        <span class="pill p3">C#</span>
+        <span class="pill p3">Swift</span>
         <span class="pill p5">Problem solving</span>
         <span class="pill p4">Cryptography</span>
         <span class="pill p1">Network architecture</span>
@@ -364,10 +376,17 @@
 
         <span class="pill p1">SIEM</span>
         <span class="pill p3">Containerization</span>
-        <span class="pill p2">🐧</span>
-        <span class="pill p4">🍏</span>
+        <span class="pill p2">Linux</span>
+        <span class="pill p4">Apple</span>
+        <span class="pill p4">Windows</span>        
         <span class="pill p5">Firewall configuration</span>
         <span class="pill p3">Phishing detection</span>
+
+        <span class="pill p1">VLANs</span>
+        <span class="pill p5">Subnetting</span>
+        <span class="pill p3">CIS Benchmarks</span>
+        <span class="pill p4">Privileged Access Management</span>
+        <span class="pill p2">Active Directory</span>
 
       </div>
     </div>
@@ -438,10 +457,11 @@
   <div class="win" id="win-cv" data-x="10" data-y="52" style="left:46%; top:4%; width:720px;">
     <div class="titlebar"><div class="box" data-close="cv"></div><div class="title">CV</div></div>
     <div class="win-body">
-      <iframe src="cv.pdf" title="CV" style="width:100%; height:820px; border:1.5px solid var(--chrome-stripe); border-radius:10px; background:var(--white);"></iframe>
+      <iframe src="cv_kasperjonassen.pdf" title="CV" style="width:100%; height:820px; border:1.5px solid var(--chrome-stripe); border-radius:10px; background:var(--white);"></iframe>
       <div class="links" style="margin-top:14px;">
-        <a class="link-btn" href="cv.pdf" target="_blank" rel="noopener">Open in a new window</a>
-        <a class="link-btn" href="cv.pdf" download>Download CV</a>
+        <a class="link-btn" href="cv_kasperjonassen.pdf" target="_blank" rel="noopener">Open in a new window</a>
+        <a class="link-btn" href="cv_kasperjonassen.pdf" download>Download CV</a>
+        <a class="link-btn" href="ansøgning_kasperjonassen.pdf" download>Download Application</a>
       </div>
     </div>
     <div class="resize-handle"></div>
@@ -454,6 +474,25 @@
       <p style="margin:4px 0;"><strong>GitHub</strong> — @kappertherapper</p>
       <p style="margin:4px 0;"><strong>LinkedIn</strong> — kasperjonassen</p>
       <p style="margin:4px 0;"><strong>Instagram</strong> — @kasperkage</p>
+    </div>
+    <div class="resize-handle"></div>
+  </div>
+
+  <!-- TRANSLATE WINDOW -->
+  <div class="win" id="win-translate" data-x="18" data-y="20" style="left:18%; top:20%; width:340px;">
+    <div class="titlebar"><div class="box" data-close="translate"></div><div class="title">Translate (EN → DA)</div></div>
+    <div class="win-body" style="text-align:left;">
+      <div class="field">
+        <label>ENGLISH</label>
+        <textarea id="translate-input" rows="4"></textarea>
+      </div>
+      <div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
+        <button class="btn" id="translate-btn">Oversæt</button>
+      </div>
+      <div class="field">
+        <label>DANSK</label>
+        <textarea id="translate-output" rows="4"readonly></textarea>
+      </div>
     </div>
     <div class="resize-handle"></div>
   </div>
@@ -551,6 +590,29 @@
   });
   $("#new-text-window").addEventListener("click", ()=> openWin("newtext"));
   $("#newtext-create").addEventListener("click", createTextWindow);
+
+  /* ---------- TRANSLATE ---------- */
+  const translateBtn = $("#translate-btn");
+  if(translateBtn){
+    translateBtn.addEventListener("click", async ()=>{
+      const input = $("#translate-input");
+      const output = $("#translate-output");
+      const text = input.value.trim();
+      if(!text) return;
+      output.value = "Oversætter…";
+      translateBtn.disabled = true;
+      try{
+        const res = await fetch("https://api.mymemory.translated.net/get?q=" + encodeURIComponent(text) + "&langpair=en|da");
+        const data = await res.json();
+        const translated = data && data.responseData && data.responseData.translatedText;
+        output.value = translated ? translated : "Kunne ikke oversætte teksten lige nu.";
+      }catch(err){
+        output.value = "Fejl: kunne ikke nå oversættelsestjenesten.";
+      }finally{
+        translateBtn.disabled = false;
+      }
+    });
+  }
 
   function toggleHacker(){
     document.documentElement.classList.toggle("hacker");
