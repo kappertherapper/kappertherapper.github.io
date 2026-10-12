@@ -89,6 +89,7 @@
     transition:opacity 0.3s ease;
   }
   html.hacker .cloud{ opacity:0; }
+  html.leopard .cloud{ display:none; }
   .cloud::before, .cloud::after{ content:""; position:absolute; background:var(--white); border-radius:50%; }
   .c1{ width:140px; height:60px; top:8%; left:6%; animation-duration:26s; }
   .c1::before{ width:80px; height:80px; top:-40px; left:15px; }
@@ -107,7 +108,20 @@
 
   h1,h2,h3{ font-family:var(--system-font); margin:0; font-weight:600; }
 
+  /* icons live OUTSIDE #desktop so the zoom transform never moves them */
   #desktop{ position:relative; width:100%; height:100%; padding-top:30px; }
+
+  /* ===== aurora light streaks (Leopard wallpaper) ===== */
+  .streak{
+    position:fixed; z-index:0; pointer-events:none; border-radius:999px; display:none;
+    filter:blur(6px); opacity:0.5; transform:rotate(-24deg);
+    background:linear-gradient(90deg, transparent, rgba(180,200,255,0.6), transparent);
+  }
+  .s1{ width:60vw; height:22px; top:22%; left:15%; }
+  .s2{ width:40vw; height:14px; top:38%; left:45%; opacity:0.35; transform:rotate(-16deg); }
+  .s3{ width:45vw; height:10px; top:12%; left:40%; opacity:0.3; transform:rotate(-30deg); }
+  html.leopard .streak{ display:block; }
+  html.leopard.hacker .streak{ display:none; }
 
   /* ===== MENU BAR ===== */
   #menubar{
@@ -138,13 +152,15 @@
   #menubar .right{ margin-left:auto; display:flex; align-items:center; gap:14px; padding-right:16px; }
   #clock{ font-family:var(--system-font); font-size:12px; color:var(--ink-soft); }
 
+  #spotlight{ display:none; align-items:center; cursor:pointer; color:inherit; }
+  html.leopard #spotlight{ display:flex; }
+
   /* ===== profile button (top right) ===== */
   .menu-item.profile{ padding:0 12px; }
   .menu-item.profile:hover, .menu-item.profile.open{ background:transparent; }
   .profile-btn{
     width:24px; height:24px;
     display:flex; align-items:center; justify-content:center;
-    font-size:16px;
     transition:transform 0.15s ease;
   }
   .menu-item.profile:hover .profile-btn, .menu-item.profile.open .profile-btn{ transform:scale(1.1); }
@@ -155,13 +171,14 @@
   html.hacker .menu-item.profile .menu-dropdown .row.highlight{ color:#08120c; }
 
   /* ===== DESKTOP ICONS ===== */
+  #icons, #icons-left{ position:absolute; z-index:1; }
   #icons{
-    position:absolute; top:100px; right:0; bottom:0;
+    top:100px; right:0; bottom:0;
     display:flex; flex-direction:column; flex-wrap:wrap; align-content:flex-end;
     gap:4px; padding:20px;
   }
   #icons-left{
-    position:absolute; top:200px; left:0; bottom:0;
+    top:200px; left:0; bottom:0;
     display:flex; flex-direction:column; flex-wrap:wrap; align-content:flex-start;
     gap:4px; padding:20px;
   }
@@ -171,11 +188,27 @@
   html.hacker .icon:hover{ background:rgba(57,255,143,0.08); }
   .icon.selected{ background:rgba(255,255,255,0.55); }
   html.hacker .icon.selected{ background:rgba(57,255,143,0.14); }
+  html.leopard .icon:hover{ background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.2); }
+  html.leopard .icon.selected{ background:rgba(90,140,230,0.35); border-color:rgba(255,255,255,0.35); }
   .icon .glyph{
     width:52px; height:44px; margin:0 auto 6px; display:flex; align-items:center; justify-content:center;
-    font-size:28px; background:var(--white); border-radius:16px; box-shadow:0 6px 14px var(--shadow);
+    font-size:28px; border-radius:16px; color:#fff;
+    box-shadow:0 6px 14px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.4);
+  }
+  html.leopard .icon .glyph{
+    height:52px; border-radius:12px;
+    box-shadow:0 3px 8px rgba(0,5,25,0.45), inset 0 1px 0 rgba(255,255,255,0.4);
   }
   .icon .label{ font-family:var(--system-font); font-size:11px; color:var(--ink); font-weight:600; line-height:1.3; }
+  html.leopard .icon .label{ color:#fff; text-shadow:0 1px 3px rgba(0,5,25,0.85); }
+
+  /* icon tile colors: same colorful gradients in both modes */
+  .tile-a{ background:linear-gradient(180deg,#7ec3f5,#3d7ec9); }
+  .tile-b{ background:linear-gradient(180deg,#a8e37c,#4ca323); }
+  .tile-c{ background:linear-gradient(180deg,#f7a97c,#dd6a24); }
+  .tile-d{ background:linear-gradient(180deg,#c8b4f7,#7c5cd0); }
+  .tile-e{ background:linear-gradient(180deg,#f7d77c,#d9a41c); }
+  .tile-f{ background:linear-gradient(180deg,#f5b0b8,#d34a5e); }
 
   /* ===== WINDOWS ===== */
   .win{
@@ -201,10 +234,38 @@
     opacity:0.5;
   }
 
+  /* traffic lights (Leopard mode only) */
+  .lights{ display:none; gap:6px; margin-right:8px; align-items:center; flex:0 0 auto; }
+  html.leopard .lights{ display:flex; }
+  .light{
+    width:12px; height:12px; border-radius:50%; cursor:pointer;
+    border:1px solid rgba(0,0,0,0.35);
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.55), 0 1px 2px rgba(0,0,0,0.25);
+  }
+  .light:hover{ filter:brightness(1.15); }
+  .light.close{ background: radial-gradient(circle at 32% 28%, #fda39c, #e0271f 65%); }
+  .light.min{ background: radial-gradient(circle at 32% 28%, #ffe1a0, #f2a71c 65%); }
+  .light.max{ background: radial-gradient(circle at 32% 28%, #b9ec93, #59a821 65%); }
+  html.leopard .titlebar .box{ display:none; }
+  html.leopard .titlebar .title{ padding-right:48px; }
+  html.hacker.leopard .titlebar .title{ text-shadow:none; }
+
   .badge{ display:inline-block; background:var(--white); padding:6px 16px; border-radius:999px; font-size:0.82rem; font-weight:600; color:var(--ink-soft); box-shadow:0 6px 16px var(--shadow); margin-bottom:16px; }
+  .avatar{ width:112px; height:112px; margin:0 auto 16px; position:relative; }
+  .avatar img{
+    width:100%; height:100%; border-radius:50%; object-fit:cover; display:block;
+    border:3px solid var(--accent); box-shadow:0 8px 20px var(--shadow);
+  }
+  .avatar-fallback{ display:none; }
+  .avatar.noimg img{ display:none; }
+  .avatar.noimg .avatar-fallback{
+    display:flex; width:100%; height:100%; border-radius:50%;
+    align-items:center; justify-content:center;
+    background:var(--accent); color:var(--white);
+    font-family:var(--system-font); font-weight:700; font-size:2rem;
+    border:3px solid var(--accent-strong); box-shadow:0 8px 20px var(--shadow);
+  }
   .hero-name{ font-size:clamp(1.5rem,4vw,2.1rem); line-height:1.2; }
-  .wave{ display:inline-block; animation:wave 2.4s ease-in-out infinite; transform-origin:70% 70%; }
-  @keyframes wave{ 0%,60%,100%{transform:rotate(0deg);} 10%{transform:rotate(14deg);} 20%{transform:rotate(-8deg);} 30%{transform:rotate(14deg);} 40%{transform:rotate(-4deg);} }
   .sub{ margin-top:10px; font-size:1.02rem; color:var(--ink-soft); line-height:1.6; }
 
   .pills{ display:flex; flex-wrap:wrap; gap:10px; margin-top:6px; }
@@ -213,12 +274,15 @@
   .pill.p1{ background:var(--blush); } .pill.p2{ background:var(--mint); } .pill.p3{ background:var(--sky); }
   .pill.p4{ background:var(--butter); } .pill.p5{ background:var(--lavender); }
   html.hacker .pill{ background:var(--paper); border:1px solid var(--ink-soft); }
+  html.leopard .pill{ background:#3a3d42; border:1px solid #55585e; box-shadow:0 1px 3px rgba(0,0,0,0.35); }
+  html.leopard .pill:hover{ transform:translateY(-2px); }
 
   .project{ padding:14px 0; border-bottom:1px dashed var(--chrome-stripe); }
   .project:last-child{ border-bottom:none; }
   .project h4{ font-family:var(--system-font); font-size:1rem; margin-bottom:4px; }
   .project p{ margin:0; color:var(--ink-soft); font-size:0.94rem; }
   .project .tag{ display:inline-block; font-size:0.7rem; font-weight:700; background:var(--mint); color:var(--ink); padding:2px 10px; border-radius:999px; margin-top:6px; }
+  html.leopard .project .tag{ background:var(--white); border:1px solid #55585e; }
   .project-link{
     display:inline-flex; align-items:center; gap:6px; margin-top:8px;
     font-family:var(--system-font); font-size:0.8rem; font-weight:600; color:var(--accent-strong);
@@ -241,8 +305,14 @@
     padding:9px 18px; cursor:pointer; box-shadow:0 6px 14px var(--shadow);
   }
   html.hacker .btn{ color:#08120c; }
-  .btn:hover{ background:var(--accent-strong); }
+  .btn:hover{ filter:brightness(1.05); }
   .btn.ghost{ background:var(--white); color:var(--ink); }
+  html.leopard .btn{
+    background:linear-gradient(180deg,#5b9af0,#2f68c4); color:#fff; border:1px solid #234f96; border-radius:8px;
+    box-shadow:0 2px 5px rgba(0,5,25,0.3), inset 0 1px 0 rgba(255,255,255,0.4);
+  }
+  html.hacker.leopard .btn{ background:linear-gradient(180deg,#1fae63,#0d6e3a); color:#04120a; border-color:#0d6e3a; }
+  html.leopard .btn.ghost{ background:var(--paper); color:var(--ink); border:1px solid rgba(120,130,150,0.5); }
 
   .field{ margin-bottom:12px; display:flex; flex-direction:column; gap:5px; }
   .field label{ font-family:var(--system-font); font-size:0.72rem; letter-spacing:0.03em; color:var(--ink-soft); }
@@ -251,6 +321,7 @@
     border:1.5px solid var(--chrome-stripe); border-radius:10px; background:var(--white); color:var(--ink);
     resize:vertical;
   }
+  html.leopard .field input, html.leopard .field textarea{ border-radius:7px; border-color:#55585e; box-shadow:inset 0 1px 3px rgba(0,0,0,0.35); }
   .field input:focus, .field textarea:focus{ outline:2px solid var(--accent); outline-offset:1px; }
   #win-contact .field label{ font-size:0.85rem; letter-spacing:0; font-weight:600; color:var(--ink); }
 
@@ -258,7 +329,7 @@
   .win.dialog .win-body{ text-align:center; }
   .dialog-actions{ display:flex; gap:10px; justify-content:center; margin-top:16px; }
 
-  footer.sig{ margin-top:6px; color:var(--ink-soft); font-size:0.85rem; opacity:0.85; }
+  footer.sig{ margin-top:6px; color:var(--ink-soft); font-size:0.85rem; opacity:0.85; display:inline-flex; align-items:center; gap:5px; }
   footer.sig .heart{ color:#f2a8b8; }
   html.hacker footer.sig .heart{ color:var(--ink); }
 
@@ -266,10 +337,144 @@
   ::-webkit-scrollbar-track{ background:transparent; }
   ::-webkit-scrollbar-thumb{ background:var(--accent); border-radius:8px; border:3px solid var(--chrome); }
 
+  /* ===== DARK MODE (Leopard) ===== */
+  html.leopard{
+    --chrome:#2e3136;
+    --chrome-stripe:#41444a;
+    --ink:#e8e9ec;
+    --ink-soft:#a8adb8;
+    --accent:#5b9af0;
+    --accent-strong:#8ab4f8;
+    --paper:#26282c;
+    --white:#3a3d42;
+    --shadow: rgba(0,0,0,0.55);
+    --system-font:"Lucida Grande","Lucida Sans Unicode","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --body-font:"Lucida Grande","Lucida Sans Unicode","Helvetica Neue",Helvetica,Arial,sans-serif;
+  }
+  html.leopard body{
+    background:
+      radial-gradient(ellipse 90% 70% at 68% 18%, rgba(122,82,214,0.55) 0%, transparent 55%),
+      radial-gradient(ellipse 70% 60% at 20% 78%, rgba(38,140,206,0.5) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 85% 70%, rgba(196,90,160,0.35) 0%, transparent 55%),
+      linear-gradient(180deg, #060d2e 0%, #0b1a45 45%, #07102f 100%);
+  }
+  html.hacker.leopard body{
+    background:
+      radial-gradient(ellipse 80% 60% at 60% 20%, rgba(57,255,143,0.10) 0%, transparent 60%),
+      repeating-linear-gradient(0deg, rgba(57,255,143,0.05) 0px, rgba(57,255,143,0.05) 1px, transparent 1px, transparent 3px),
+      linear-gradient(180deg, #050b07 0%, #0a140e 60%, #050b07 100%);
+  }
+  html.leopard #menubar{
+    height:26px; font-size:13px;
+    background:rgba(10,14,22,0.45);
+    backdrop-filter: blur(14px) saturate(1.6);
+    -webkit-backdrop-filter: blur(14px) saturate(1.6);
+    border-bottom:none;
+  }
+  html.hacker.leopard #menubar{ background:rgba(4,12,7,0.72); }
+  html.leopard #menubar .brand, html.leopard .menu-item, html.leopard #clock{
+    color:#fff; text-shadow:0 1px 2px rgba(0,0,0,0.45);
+  }
+  html.hacker.leopard #menubar .brand, html.hacker.leopard .menu-item, html.hacker.leopard #clock{ color:#39ff8f; }
+  html.leopard .menu-item:hover, html.leopard .menu-item.open{ background:rgba(80,130,220,0.75); color:#fff; }
+  html.hacker.leopard .menu-item:hover, html.hacker.leopard .menu-item.open{ background:rgba(57,255,143,0.22); color:#39ff8f; }
+  html.leopard .menu-item.profile:hover, html.leopard .menu-item.profile.open{ background:transparent; color:#fff; }
+  html.leopard .menu-dropdown{
+    background:rgba(38,41,46,0.95);
+    backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    border:1px solid rgba(0,0,0,0.55); border-radius:8px;
+    box-shadow:0 14px 34px rgba(0,0,0,0.6); padding:4px;
+  }
+  html.hacker.leopard .menu-dropdown{ background:rgba(6,16,10,0.94); border-color:rgba(57,255,143,0.4); }
+  html.leopard .menu-dropdown .row{ color:var(--ink); padding:5px 10px; border-radius:5px; text-shadow:none; }
+  html.leopard .menu-dropdown .row:hover{ background:linear-gradient(180deg,#5b9af0,#2f68c4); color:#fff; }
+  html.hacker.leopard .menu-dropdown .row{ color:#39ff8f; }
+  html.hacker.leopard .menu-dropdown .row:hover{ background:linear-gradient(180deg,#1fae63,#0d6e3a); color:#04120a; }
+  html.leopard .menu-dropdown .sep{ background:rgba(255,255,255,0.12); margin:4px 8px; }
+  html.leopard .menu-item.profile .menu-dropdown .row.highlight{ background:linear-gradient(180deg,#5b9af0,#2f68c4); color:#fff; }
+  html.leopard #menubar .brand .dot{ display:none; }
+
+  html.leopard .win{
+    background:linear-gradient(180deg,#3d4045,#2e3136);
+    border:1px solid rgba(0,0,0,0.65); border-radius:10px 10px 6px 6px;
+    box-shadow:0 22px 50px rgba(0,5,25,0.65), 0 2px 8px rgba(0,0,0,0.45);
+  }
+  html.hacker.leopard .win{
+    background:linear-gradient(180deg,#0e1613,#0a100d);
+    border-color:rgba(57,255,143,0.5);
+    box-shadow:0 22px 50px rgba(0,20,8,0.8), 0 0 12px rgba(57,255,143,0.15);
+  }
+  html.leopard .titlebar{
+    height:28px;
+    background:linear-gradient(180deg,#4b4e54 0%,#41454b 48%,#383b41 100%);
+    border-bottom:1px solid rgba(0,0,0,0.55);
+  }
+  html.hacker.leopard .titlebar{ background:linear-gradient(180deg,#12291c,#0b1a12); border-bottom-color:rgba(57,255,143,0.4); }
+  html.leopard .win:not(.active) .titlebar{ filter:opacity(0.75); }
+  html.leopard .titlebar .title{ color:var(--ink); text-shadow:0 1px 1px rgba(0,0,0,0.6); }
+  html.leopard .badge{ background:var(--white); border:1px solid #55585e; color:var(--ink-soft); box-shadow:none; }
+  html.leopard .link-btn{ border:1px solid #55585e; border-radius:9px; box-shadow:0 2px 6px rgba(0,0,0,0.35); }
+  html.leopard .link-btn:hover{ border-color:#5b9af0; }
+  html.leopard #icon-installer .glyph{ background:linear-gradient(180deg,#7ce8dc,#1fae9c); }
+
+  /* install icon: moon in light mode, sun in dark mode */
+  #icon-installer .sun{ display:none; }
+  html.leopard #icon-installer .moon{ display:none; }
+  html.leopard #icon-installer .sun{ display:block; }
+
+  /* ===== DOCK (both modes) ===== */
+  #dock{
+    position:fixed; left:50%; bottom:8px; transform:translateX(-50%); z-index:4500;
+    display:flex; align-items:flex-end; gap:8px; padding:7px 10px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.28));
+    backdrop-filter: blur(18px) saturate(1.4);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    border:1px solid rgba(75,63,99,0.25); border-radius:18px;
+    box-shadow:0 10px 30px rgba(75,63,99,0.25), inset 0 1px 0 rgba(255,255,255,0.8);
+    user-select:none; max-width:96vw;
+  }
+  html.leopard #dock{
+    background:linear-gradient(180deg, rgba(255,255,255,0.10), rgba(0,0,0,0.18));
+    border-color:rgba(255,255,255,0.18);
+    box-shadow:0 10px 30px rgba(0,5,25,0.6), inset 0 1px 0 rgba(255,255,255,0.12);
+  }
+  html.hacker.leopard #dock{
+    background:linear-gradient(180deg, rgba(57,255,143,0.10), rgba(57,255,143,0.04));
+    border-color:rgba(57,255,143,0.35);
+    box-shadow:0 10px 30px rgba(0,10,4,0.8), inset 0 1px 0 rgba(57,255,143,0.25);
+  }
+  .dock-item{ position:relative; display:flex; flex-direction:column; align-items:center; }
+  .dock-item .glyph{
+    width:46px; height:46px; border-radius:11px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; color:#fff;
+    box-shadow:0 3px 8px rgba(0,5,25,0.45), inset 0 1px 0 rgba(255,255,255,0.4);
+    transition:transform 0.18s cubic-bezier(.34,1.4,.64,1);
+  }
+  .dock-item:hover .glyph{ transform:translateY(-14px) scale(1.25); }
+  .dock-item .tooltip{
+    position:absolute; top:-34px; left:50%; transform:translateX(-50%);
+    background:rgba(20,26,45,0.9); color:#fff; font-size:11px; font-weight:600;
+    padding:3px 9px; border-radius:6px; white-space:nowrap;
+    opacity:0; pointer-events:none; transition:opacity 0.15s ease;
+    text-shadow:none; z-index:10;
+  }
+  .dock-item:hover .tooltip{ opacity:1; }
+  .dock-item .dot{
+    width:4px; height:4px; border-radius:50%; background:var(--ink-soft);
+    margin-top:3px; opacity:0; transition:opacity 0.2s ease;
+  }
+  html.leopard .dock-item .dot{ background:rgba(255,255,255,0.9); }
+  html.hacker.leopard .dock-item .dot{ background:#39ff8f; }
+  .dock-item.running .dot{ opacity:1; }
+  #dock .dock-sep{ width:1px; align-self:stretch; margin:4px 3px; background:rgba(75,63,99,0.25); }
+  html.leopard #dock .dock-sep{ background:rgba(255,255,255,0.35); }
+
   @media (max-width:720px){
     .win{ width:90vw !important; left:5vw !important; min-width:0; }
     #icons{ right:0; left:0; align-content:flex-start; flex-direction:row; flex-wrap:wrap; justify-content:flex-end; }
     #icons-left{ left:0; right:0; align-content:flex-start; flex-direction:row; flex-wrap:wrap; justify-content:flex-start; bottom:auto; top:auto; }
+    .dock-item .glyph{ width:38px; height:38px; }
   }
 </style>
 </head>
@@ -280,13 +485,39 @@
 <div class="cloud c3"></div>
 <div class="cloud c4"></div>
 
+<div class="streak s1"></div>
+<div class="streak s2"></div>
+<div class="streak s3"></div>
+
 <div id="menubar">
   <div class="menu-item profile" data-menu="profile">
-    <div class="profile-btn">🍐</div>
+    <div class="profile-btn">
+      <svg width="17" height="19" viewBox="0 0 100 110" aria-hidden="true">
+        <defs>
+          <linearGradient id="pearBody" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#a8d867"/>
+            <stop offset="0.55" stop-color="#7bbd48"/>
+            <stop offset="1" stop-color="#4e9a2e"/>
+          </linearGradient>
+          <linearGradient id="pearLeaf" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0" stop-color="#7fc94a"/>
+            <stop offset="1" stop-color="#4e9a2e"/>
+          </linearGradient>
+        </defs>
+        <g transform="rotate(14 50 60)">
+          <path d="M52.5 7.5C50 1.5 41 -0.5 33 2 36.5 9.5 46 11 52.5 7.5Z" fill="url(#pearLeaf)"/>
+          <path d="M50.5 7C46 6 40.5 4.5 36 3.5" stroke="#3e7d22" stroke-width="1" fill="none" stroke-linecap="round"/>
+          <path d="M50 16C49.5 12 51.5 9.5 56 7" stroke="#8a5a2b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M50 13.5C45 13.5 38 15 38 22 38 30 40 36 36 46 26 52 22 60 22 72 22 88 34 98 50 98 66 98 78 88 78 72 78 60 74 52 64 46 60 36 62 30 62 22 62 15 55 13.5 50 13.5Z" fill="url(#pearBody)"/>
+          <ellipse cx="37" cy="48" rx="5" ry="11" fill="rgba(255,255,255,0.35)" transform="rotate(-14 37 48)"/>
+        </g>
+      </svg>
+    </div>
     <div class="menu-dropdown">
       <div class="row highlight" data-open="about">About Kasper Jonassen…</div>
       <div class="sep"></div>
       <div class="row" id="toggle-hacker">Hacker Mode</div>
+      <div class="row" id="toggle-leopard-row">Dark Mode</div>
       <div class="sep"></div>
       <div class="row" id="restart-row">Restart</div>
       <div class="row" id="shutdown-row">Shut Down</div>
@@ -317,40 +548,50 @@
   </div>
   <div class="menu-item" id="menu-contact-btn">Contact</div>
   <div class="right">
+    <div id="spotlight" title="Spotlight">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="2.4"/>
+        <path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+      </svg>
+    </div>
     <span id="clock">--:--</span>
   </div>
 </div>
 
+<!-- desktop icons: outside #desktop so zooming never moves them -->
+<div id="icons">
+  <div class="icon" data-open="about"><div class="glyph tile-a"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="10" r="1.4" fill="currentColor"/><circle cx="15" cy="10" r="1.4" fill="currentColor"/><path d="M8.5 15c1.2 1.2 5.8 1.2 7 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="label">About Me</div></div>
+  <div class="icon" data-open="skills"><div class="glyph tile-b"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M14.5 4.5a4.2 4.2 0 0 0-5.6 5.4L3.8 15a1.8 1.8 0 0 0 2.5 2.5l5.1-5.1a4.2 4.2 0 0 0 5.4-5.6l-2.6 2.6-2.4-.8-.8-2.4 2.5-2.7Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></div><div class="label">Skills</div></div>
+  <div class="icon" data-open="projects"><div class="glyph tile-c"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M7 9l3 2.5L7 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12.5 15h4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="label">Projects</div></div>
+  <div class="icon" data-open="links"><div class="glyph tile-d"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M9.5 14.5 14.5 9.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 6.5 13.8 4.7a3.9 3.9 0 0 1 5.5 5.5l-1.8 1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 17.5l-1.8 1.8a3.9 3.9 0 0 1-5.5-5.5l1.8-1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="label">Links</div></div>
+  <div class="icon" data-open="cv"><div class="glyph tile-e"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M6 3h8l4 4v14H6V3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 3v4h4" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 12h6M9 15.5h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div><div class="label">CV</div></div>
+</div>
+<div id="icons-left">
+  <div class="icon" id="icon-installer"><div class="glyph tile-f"><svg class="moon" width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M20.5 13.5A8.5 8.5 0 1 1 10.5 3.5a7 7 0 0 0 10 10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><svg class="sun" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="label" id="installer-label">Dark Mode</div></div>
+  <div class="icon" data-open="translate"><div class="glyph tile-c"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 12h17M12 3.5c2.6 2.6 2.6 14.4 0 17M12 3.5c-2.6 2.6-2.6 14.4 0 17" stroke="currentColor" stroke-width="1.6"/></svg></div><div class="label">Translate</div></div>
+  <div class="icon" data-open="warning"><div class="glyph tile-e"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M6 7l1 12.5h10L18 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7" stroke="currentColor" stroke-width="1.8"/><path d="M10.3 10.5v5.5M13.7 10.5v5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="label">Trash</div></div>
+</div>
+
 <div id="desktop">
-  <div id="icons">
-    <div class="icon" data-open="about"><div class="glyph">🤠</div><div class="label">About Me</div></div>
-    <div class="icon" data-open="skills"><div class="glyph">🧰</div><div class="label">Skills</div></div>
-    <div class="icon" data-open="projects"><div class="glyph">💻</div><div class="label">Projects</div></div>
-    <div class="icon" data-open="links"><div class="glyph">🔗</div><div class="label">Links</div></div>
-    <div class="icon" data-open="cv"><div class="glyph">📄</div><div class="label">CV</div></div>
-  </div>
-  <div id="icons-left">
-    <div class="icon" data-open="translate"><div class="glyph">🌐</div><div class="label">Translate</div></div>
-    <div class="icon" data-open="warning"><div class="glyph">🗑</div><div class="label">Trash</div></div>
-  </div>
 
   <!-- ABOUT WINDOW -->
   <div class="win open" id="win-about" data-x="6" data-y="10" style="left:16%; top:10%; width:440px;">
-    <div class="titlebar"><div class="box" data-close="about"></div><div class="title">About Me</div></div>
+    <div class="titlebar"><div class="box" data-close="about"></div><div class="lights"><div class="light close" data-close="about"></div><div class="light min" data-min="about"></div><div class="light max" data-max="about"></div></div><div class="title">About Me</div></div>
     <div class="win-body">
-      <h1 class="hero-name">Hi, I'm Kasper</h1>
+      <div class="avatar"><img src="profil.jpg" alt="Kasper" onerror="this.parentElement.classList.add('noimg')"><span class="avatar-fallback">KJ</span></div>
+      <h1 class="hero-name" style="text-align:center;">Hi, I'm Kasper</h1>
       <p class="sub">Computer science grad, becoming a security nerd.</p>
       <p class="sub">I studied computer science at EAAA in Aarhus and spend my time somewhere between building things, learning objects, breaking stuff etc.</p>
       <p class="sub">But i found a passion for cybersecurity and now i am giving my everything to try and learn all about that.</p>
       <p class="sub">The balance between offense and defense and understanding the critical in protecting what can be exploited.</p>
-      <span class="badge">📍 Copenhagen, Denmark</span>
+      <span class="badge">Copenhagen, Denmark</span>
     </div>
     <div class="resize-handle"></div>
   </div>
 
   <!-- SKILLS WINDOW -->
   <div class="win" id="win-skills" data-x="46" data-y="16" style="left:46%; top:16%; width:380px;">
-    <div class="titlebar"><div class="box" data-close="skills"></div><div class="title">Skills</div></div>
+    <div class="titlebar"><div class="box" data-close="skills"></div><div class="lights"><div class="light close" data-close="skills"></div><div class="light min" data-min="skills"></div><div class="light max" data-max="skills"></div></div><div class="title">Skills</div></div>
     <div class="win-body">
       <div class="pills">
         <span class="pill p1">Cybersecurity</span>
@@ -378,7 +619,7 @@
         <span class="pill p3">Containerization</span>
         <span class="pill p2">Linux</span>
         <span class="pill p4">Apple</span>
-        <span class="pill p4">Windows</span>        
+        <span class="pill p4">Windows</span>
         <span class="pill p5">Firewall configuration</span>
         <span class="pill p3">Phishing detection</span>
 
@@ -395,7 +636,7 @@
 
   <!-- PROJECTS WINDOW -->
   <div class="win" id="win-projects" data-x="14" data-y="30" style="left:34%; top:25%; width:420px;">
-    <div class="titlebar"><div class="box" data-close="projects"></div><div class="title">Projects</div></div>
+    <div class="titlebar"><div class="box" data-close="projects"></div><div class="lights"><div class="light close" data-close="projects"></div><div class="light min" data-min="projects"></div><div class="light max" data-max="projects"></div></div><div class="title">Projects</div></div>
     <div class="win-body">
       <div class="project">
         <h4>kasperkluns</h4>
@@ -404,7 +645,7 @@
       </div>
       <div class="project">
         <h4>bestphishingdetectoreverrr</h4>
-        <p>A lightweight browser extension that detects phishing sites in real time — it analyzes URLs for suspicious patterns and warns you before you land on something malicious.</p>
+        <p>A lightweight browser extension that detects phishing sites in real time. It analyzes URLs for suspicious patterns and warns you before you land on something malicious.</p>
         <div><a class="project-link" href="https://github.com/kappertherapper/bestphishingdetectoreverrr" target="_blank" rel="noopener">Link</a></div>
       </div>
       <div class="project">
@@ -419,7 +660,7 @@
 
   <!-- LINKS WINDOW -->
   <div class="win" id="win-links" data-x="30" data-y="46" style="left:40%; top:6%; width:150px;">
-    <div class="titlebar"><div class="box" data-close="links"></div><div class="title">Links</div></div>
+    <div class="titlebar"><div class="box" data-close="links"></div><div class="lights"><div class="light close" data-close="links"></div><div class="light min" data-min="links"></div><div class="light max" data-max="links"></div></div><div class="title">Links</div></div>
     <div class="win-body">
       <div class="links">
         <a class="link-btn gh" href="https://github.com/kappertherapper" target="_blank" rel="noopener">GitHub</a>
@@ -433,10 +674,10 @@
 
   <!-- CONTACT WINDOW -->
   <div class="win" id="win-contact" data-x="30" data-y="46" style="left:30%; top:46%; width:360px;">
-    <div class="titlebar"><div class="box" data-close="contact"></div><div class="title">Contact</div></div>
+    <div class="titlebar"><div class="box" data-close="contact"></div><div class="lights"><div class="light close" data-close="contact"></div><div class="light min" data-min="contact"></div><div class="light max" data-max="contact"></div></div><div class="title">Contact</div></div>
     <div class="win-body" style="text-align:left;">
       <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:18px;">
-        <div style="font-size:26px; line-height:1;">✉️</div>
+        <div style="flex:0 0 auto;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="display:block;"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="var(--ink-soft)" stroke-width="1.8"/><path d="m4 7 8 6.5L20 7" stroke="var(--ink-soft)" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
         <div>
           <h3 style="margin:0 0 4px;">Contact</h3>
           <p class="sub" style="margin:0; font-size:0.88rem;">Questions about something? I usally reply within a day.</p>
@@ -455,7 +696,7 @@
 
   <!-- CV WINDOW -->
   <div class="win" id="win-cv" data-x="10" data-y="52" style="left:46%; top:4%; width:720px;">
-    <div class="titlebar"><div class="box" data-close="cv"></div><div class="title">CV</div></div>
+    <div class="titlebar"><div class="box" data-close="cv"></div><div class="lights"><div class="light close" data-close="cv"></div><div class="light min" data-min="cv"></div><div class="light max" data-max="cv"></div></div><div class="title">CV</div></div>
     <div class="win-body">
       <iframe src="cv_kasperjonassen.pdf" title="CV" style="width:100%; height:750px; border:1.5px solid var(--chrome-stripe); border-radius:10px; background:var(--white);"></iframe>
       <div class="links" style="margin-top:14px;">
@@ -469,18 +710,18 @@
 
   <!-- SOCIALS WINDOW -->
   <div class="win" id="win-socials" data-x="40" data-y="26" style="left:40%; top:26%; width:260px;">
-    <div class="titlebar"><div class="box" data-close="socials"></div><div class="title">Socials</div></div>
+    <div class="titlebar"><div class="box" data-close="socials"></div><div class="lights"><div class="light close" data-close="socials"></div><div class="light min" data-min="socials"></div><div class="light max" data-max="socials"></div></div><div class="title">Socials</div></div>
     <div class="win-body">
-      <p style="margin:4px 0;"><strong>GitHub</strong> — @kappertherapper</p>
-      <p style="margin:4px 0;"><strong>LinkedIn</strong> — kasperjonassen</p>
-      <p style="margin:4px 0;"><strong>Instagram</strong> — @kasperkage</p>
+      <p style="margin:4px 0;"><strong>GitHub</strong>: @kappertherapper</p>
+      <p style="margin:4px 0;"><strong>LinkedIn</strong>: kasperjonassen</p>
+      <p style="margin:4px 0;"><strong>Instagram</strong>: @kasperkage</p>
     </div>
     <div class="resize-handle"></div>
   </div>
 
   <!-- TRANSLATE WINDOW -->
   <div class="win" id="win-translate" data-x="18" data-y="20" style="left:18%; top:20%; width:340px;">
-    <div class="titlebar"><div class="box" data-close="translate"></div><div class="title">Translate (EN → DA)</div></div>
+    <div class="titlebar"><div class="box" data-close="translate"></div><div class="lights"><div class="light close" data-close="translate"></div><div class="light min" data-min="translate"></div><div class="light max" data-max="translate"></div></div><div class="title">Translate (EN → DA)</div></div>
     <div class="win-body" style="text-align:left;">
       <div class="field">
         <label>ENGLISH</label>
@@ -499,17 +740,19 @@
 
   <!-- JOKE / TRASH DIALOG -->
   <div class="win dialog" id="win-warning" data-x="35" data-y="35" style="left:35%; top:35%; width:320px;">
-    <div class="titlebar"><div class="box" data-close="warning"></div><div class="title">⚠ System Warning</div></div>
+    <div class="titlebar"><div class="box" data-close="warning"></div><div class="lights"><div class="light close" data-close="warning"></div></div><div class="title">System Warning</div></div>
     <div class="win-body">
-      <div class="dialog-icon">🔒</div>
+      <div class="dialog-icon">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><rect x="5" y="10" width="14" height="10" rx="2" stroke="var(--ink-soft)" stroke-width="1.8"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="var(--ink-soft)" stroke-width="1.8"/><circle cx="12" cy="15" r="1.6" fill="var(--ink-soft)"/></svg>
+      </div>
       <p>Access denied. Requires root privileges, sorry :)</p>
       <div class="dialog-actions"><button class="btn" data-close="warning">OK</button></div>
     </div>
   </div>
 
   <!-- GENERIC ALERT -->
-  <div class="win dialog" id="win-alert" data-x="40" data-y="40" style="left:40%; top:40%; width:280px;">
-    <div class="titlebar"><div class="box" data-close="alert"></div><div class="title">Alert</div></div>
+  <div class="win dialog" id="win-alert" data-x="40" data-y="40" style="left:40%; top:40%; width:290px;">
+    <div class="titlebar"><div class="box" data-close="alert"></div><div class="lights"><div class="light close" data-close="alert"></div></div><div class="title">Alert</div></div>
     <div class="win-body">
       <p id="alert-text">Are you sure?</p>
       <div class="dialog-actions"><button class="btn ghost" data-close="alert">OK</button></div>
@@ -517,7 +760,7 @@
   </div>
   <!-- NEW TEXT WINDOW DIALOG -->
   <div class="win dialog" id="win-newtext" data-x="32" data-y="32" style="left:32%; top:32%; width:320px;">
-    <div class="titlebar"><div class="box" data-close="newtext"></div><div class="title">New Text Window</div></div>
+    <div class="titlebar"><div class="box" data-close="newtext"></div><div class="lights"><div class="light close" data-close="newtext"></div></div><div class="title">New Text Window</div></div>
     <div class="win-body" style="text-align:left;">
       <div class="field"><label>TITLE</label><input type="text" id="newtext-title" placeholder="Untitled"></div>
       <div class="field"><label>TEXT</label><textarea id="newtext-body" placeholder="Write anything…" rows="5"></textarea></div>
@@ -527,7 +770,24 @@
       </div>
     </div>
   </div>
-  <footer class="sig"><span class="heart">♥</span> remember to smile.</footer>
+  <footer class="sig">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 20.5C6 16 3.5 12.8 3.5 9.8A4.6 4.6 0 0 1 8 5a5 5 0 0 1 4 2.1A5 5 0 0 1 16 5a4.6 4.6 0 0 1 4.5 4.8c0 3-2.5 6.2-8.5 10.7Z" fill="#f2a8b8"/></svg>
+    remember to smile.
+  </footer>
+</div>
+
+<!-- ===== DOCK (Leopard mode only) ===== -->
+<div id="dock">
+  <div class="dock-item" data-dock="about"><div class="tooltip">About Me</div><div class="glyph tile-a"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="10" r="1.4" fill="currentColor"/><circle cx="15" cy="10" r="1.4" fill="currentColor"/><path d="M8.5 15c1.2 1.2 5.8 1.2 7 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="dot"></div></div>
+  <div class="dock-item" data-dock="skills"><div class="tooltip">Skills</div><div class="glyph tile-b"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M14.5 4.5a4.2 4.2 0 0 0-5.6 5.4L3.8 15a1.8 1.8 0 0 0 2.5 2.5l5.1-5.1a4.2 4.2 0 0 0 5.4-5.6l-2.6 2.6-2.4-.8-.8-2.4 2.5-2.7Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></div><div class="dot"></div></div>
+  <div class="dock-item" data-dock="projects"><div class="tooltip">Projects</div><div class="glyph tile-c"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M7 9l3 2.5L7 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12.5 15h4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="dot"></div></div>
+  <div class="dock-item" data-dock="links"><div class="tooltip">Links</div><div class="glyph tile-d"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M9.5 14.5 14.5 9.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 6.5 13.8 4.7a3.9 3.9 0 0 1 5.5 5.5l-1.8 1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 17.5l-1.8 1.8a3.9 3.9 0 0 1-5.5-5.5l1.8-1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="dot"></div></div>
+  <div class="dock-item" data-dock="cv"><div class="tooltip">CV</div><div class="glyph tile-e"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M6 3h8l4 4v14H6V3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 3v4h4" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 12h6M9 15.5h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div><div class="dot"></div></div>
+  <div class="dock-item" data-dock="contact"><div class="tooltip">Contact</div><div class="glyph tile-f"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="m4 7 8 6.5L20 7" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></div><div class="dot"></div></div>
+  <div class="dock-item" data-dock="translate"><div class="tooltip">Translate</div><div class="glyph tile-c"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 12h17M12 3.5c2.6 2.6 2.6 14.4 0 17M12 3.5c-2.6 2.6-2.6 14.4 0 17" stroke="currentColor" stroke-width="1.6"/></svg></div><div class="dot"></div></div>
+  <div class="dock-item" data-dock="socials"><div class="tooltip">Socials</div><div class="glyph tile-d"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 6a2.5 2.5 0 0 1 2.5-2.5h11A2.5 2.5 0 0 1 20 6v8a2.5 2.5 0 0 1-2.5 2.5H9L4.5 20.5V6Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.5 9.5h7M8.5 12.5h4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div><div class="dot"></div></div>
+  <div class="dock-sep"></div>
+  <div class="dock-item" data-dock="warning"><div class="tooltip">Trash</div><div class="glyph tile-f"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M6 7l1 12.5h10L18 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7" stroke="currentColor" stroke-width="1.8"/><path d="M10.3 10.5v5.5M13.7 10.5v5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="dot"></div></div>
 </div>
 
 <script>
@@ -538,6 +798,7 @@
 
   let zTop = 100;
   let activeWin = "about";
+  const minimized = new Set();
 
   /* ---------- CLOCK ---------- */
   function tickClock(){
@@ -566,14 +827,16 @@
   });
   $("#close-all").addEventListener("click", ()=> $all(".win.open").forEach(w=> closeWin(w.id.replace("win-",""))));
   $all(".menu-dropdown .row[data-close-active]").forEach(row=> row.addEventListener("click", ()=> closeWin(activeWin)));
-  $("#quit-row").addEventListener("click", ()=> showAlert("Nice try — this desktop never quits. It's a website, not an OS."));
+  $("#quit-row").addEventListener("click", ()=> showAlert("Nice try. This desktop never quits, it is a website, not an OS."));
   $("#restart-row").addEventListener("click", ()=> showAlert("Restarting… (just kidding, keep looking around)"));
   $("#shutdown-row").addEventListener("click", ()=> showAlert("This computer is a website. It cannot be shut down."));
+  $("#spotlight").addEventListener("click", ()=> showAlert("Spotlight is on a coffee break. Try the dock instead."));
   $("#reset-layout").addEventListener("click", resetLayout);
   $("#zoom-in").addEventListener("click", ()=> setZoom(zoomLevel+0.1));
   $("#zoom-out").addEventListener("click", ()=> setZoom(zoomLevel-0.1));
   $("#zoom-actual").addEventListener("click", ()=> setZoom(1));
   $("#toggle-hacker").addEventListener("click", toggleHacker);
+  $("#toggle-leopard-row").addEventListener("click", ()=> setLeopard(!leopardOn()));
   $("#menu-contact-btn").addEventListener("click", ()=> openWin("contact"));
   $("#contact-send").addEventListener("click", ()=>{
     const name = $("#contact-name").value.trim();
@@ -618,6 +881,37 @@
     document.documentElement.classList.toggle("hacker");
   }
 
+  /* ---------- DARK MODE (install icon) ---------- */
+  function leopardOn(){
+    return document.documentElement.classList.contains("leopard");
+  }
+  function setLeopard(on){
+    document.documentElement.classList.toggle("leopard", on);
+    $("#installer-label").textContent = on ? "Light Mode" : "Dark Mode";
+    $("#toggle-leopard-row").textContent = on ? "Light Mode" : "Dark Mode";
+    try{ localStorage.setItem("kasper-leopard", on ? "1" : "0"); }catch(err){}
+    refreshDock();
+  }
+  const installer = $("#icon-installer");
+  installer.addEventListener("click", ()=>{
+    if(installer.dataset.justDragged === "1"){
+      installer.dataset.justDragged = "";
+      return;
+    }
+    $all(".icon").forEach(i=>i.classList.remove("selected"));
+    installer.classList.add("selected");
+  });
+  installer.addEventListener("dblclick", ()=>{
+    setLeopard(!leopardOn());
+  });
+  try{
+    const saved = localStorage.getItem("kasper-leopard");
+    // default to dark mode, but respect an explicit saved choice
+    setLeopard(saved === null ? true : saved === "1");
+  }catch(err){
+    setLeopard(true);
+  }
+
   /* ---------- ZOOM ---------- */
   let zoomLevel = 1;
   function setZoom(level){
@@ -645,12 +939,14 @@
     win.style.top = (24+offset)+"%";
     win.style.width = "320px";
     win.innerHTML = `
-      <div class="titlebar"><div class="box" data-close="${id}"></div><div class="title">${escapeHtml(titleVal)}</div></div>
+      <div class="titlebar"><div class="box" data-close="${id}"></div><div class="lights"><div class="light close" data-close="${id}"></div><div class="light min" data-min="${id}"></div><div class="light max" data-max="${id}"></div></div><div class="title">${escapeHtml(titleVal)}</div></div>
       <div class="win-body"><p style="white-space:pre-wrap; margin:0;">${escapeHtml(bodyVal)}</p></div>
       <div class="resize-handle"></div>
     `;
     $("#desktop").appendChild(win);
     win.querySelector("[data-close]").addEventListener("click", ()=> closeWin(id));
+    win.querySelector("[data-min]").addEventListener("click", ()=> minimizeWin(id));
+    win.querySelector("[data-max]").addEventListener("click", ()=> maximizeWin(id));
     win.addEventListener("mousedown", ()=> focusWin(id));
     makeDraggable(win);
     makeResizable(win);
@@ -672,13 +968,48 @@
     if(!win) return;
     win.classList.add("open");
     win.style.display = "flex";
+    minimized.delete(name);
     focusWin(name);
+    refreshDock();
   }
   function closeWin(name){
     const win = $("#win-"+name);
     if(!win) return;
     win.classList.remove("open");
     win.style.display = "none";
+    minimized.delete(name);
+    refreshDock();
+  }
+  function minimizeWin(name){
+    const win = $("#win-"+name);
+    if(!win || !win.classList.contains("open")) return;
+    win.style.display = "none";
+    minimized.add(name);
+    refreshDock();
+  }
+  function maximizeWin(name){
+    const win = $("#win-"+name);
+    if(!win || !win.classList.contains("open")) return;
+    if(win.dataset.maxed === "1"){
+      win.style.left = win.dataset.prevLeft;
+      win.style.top = win.dataset.prevTop;
+      win.style.width = win.dataset.prevW;
+      win.style.height = win.dataset.prevH;
+      win.dataset.maxed = "";
+    }else{
+      win.dataset.prevLeft = win.style.left;
+      win.dataset.prevTop = win.style.top;
+      win.dataset.prevW = win.style.width;
+      win.dataset.prevH = win.style.height;
+      const pad = 12;
+      const dockClear = 72;
+      win.style.left = pad+"px";
+      win.style.top = (30+pad)+"px";
+      win.style.width = "calc(100vw - "+(pad*2)+"px)";
+      win.style.height = "calc(100vh - "+(30+pad+dockClear)+"px)";
+      win.dataset.maxed = "1";
+    }
+    focusWin(name);
   }
   function focusWin(name){
     const win = $("#win-"+name);
@@ -693,10 +1024,32 @@
     $all(".win[data-x]").forEach(w=>{
       w.style.left = w.dataset.x+"%";
       w.style.top = w.dataset.y+"%";
+      w.style.width = "";
+      w.style.height = "";
+      w.dataset.maxed = "";
     });
   }
 
-  $all("[data-close]").forEach(el=> el.addEventListener("click", ()=> closeWin(el.dataset.close)));
+  /* ---------- DOCK (Leopard mode) ---------- */
+  function refreshDock(){
+    $all(".dock-item[data-dock]").forEach(item=>{
+      const win = $("#win-"+item.dataset.dock);
+      item.classList.toggle("running", !!(win && win.classList.contains("open")));
+    });
+  }
+  $all(".dock-item[data-dock]").forEach(item=>{
+    item.addEventListener("click", ()=>{
+      const name = item.dataset.dock;
+      const win = $("#win-"+name);
+      if(!win || !win.classList.contains("open")){ openWin(name); return; }
+      if(minimized.has(name)){ openWin(name); return; }
+      focusWin(name);
+    });
+  });
+
+  $all("[data-close]").forEach(el=> el.addEventListener("click", e=>{ e.stopPropagation(); closeWin(el.dataset.close); }));
+  $all("[data-min]").forEach(el=> el.addEventListener("click", e=>{ e.stopPropagation(); minimizeWin(el.dataset.min); }));
+  $all("[data-max]").forEach(el=> el.addEventListener("click", e=>{ e.stopPropagation(); maximizeWin(el.dataset.max); }));
   $all(".win").forEach(win=> win.addEventListener("mousedown", ()=> focusWin(win.id.replace("win-",""))));
 
   /* desktop icons */
@@ -722,7 +1075,7 @@
         offX = e.clientX - r.left; offY = e.clientY - r.top;
         startX = e.clientX; startY = e.clientY;
         icon.classList.add("dragging");
-        icon.style.zIndex = "2";
+        icon.style.zIndex = "3";
         e.preventDefault();
       });
       window.addEventListener("mousemove", e=>{
@@ -789,8 +1142,9 @@
     const bar = win.querySelector(".titlebar");
     let offX=0, offY=0, dragging=false;
     bar.addEventListener("mousedown", e=>{
-      if(e.target.classList.contains("box")) return;
+      if(e.target.classList.contains("box") || e.target.closest(".lights")) return;
       dragging = true;
+      win.dataset.maxed = "";
       const rect = win.getBoundingClientRect();
       offX = e.clientX - rect.left; offY = e.clientY - rect.top;
       win.style.left = rect.left+"px"; win.style.top = rect.top+"px";
@@ -842,6 +1196,7 @@
 
   /* ---------- INIT ---------- */
   focusWin("about");
+  refreshDock();
 
   /* ---------- DEEP LINKING (e.g. index.html#cv opens the CV window) ---------- */
   function openFromHash(){
