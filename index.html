@@ -274,7 +274,8 @@
   .pill.p1{ background:var(--blush); } .pill.p2{ background:var(--mint); } .pill.p3{ background:var(--sky); }
   .pill.p4{ background:var(--butter); } .pill.p5{ background:var(--lavender); }
   html.hacker .pill{ background:var(--paper); border:1px solid var(--ink-soft); }
-  html.leopard .pill{ background:#3a3d42; border:1px solid #55585e; box-shadow:0 1px 3px rgba(0,0,0,0.35); }
+  /* dark mode keeps the light-mode pastel pill colors, with plum text so they stay readable */
+  html.leopard .pill{ color:#4B3F63; box-shadow:0 2px 6px rgba(0,0,0,0.4); }
   html.leopard .pill:hover{ transform:translateY(-2px); }
 
   .project{ padding:14px 0; border-bottom:1px dashed var(--chrome-stripe); }
@@ -298,6 +299,34 @@
     display:inline-flex; align-items:center; gap:8px; border:2px solid transparent;
   }
   .link-btn:hover{ transform:translateY(-3px) scale(1.02); border-color:var(--accent); }
+
+  /* ===== links window cards ===== */
+  .link-list{ display:flex; flex-direction:column; gap:10px; margin-top:0; }
+  .link-row{
+    display:flex; align-items:center; gap:12px; text-decoration:none;
+    background:var(--white); padding:10px 12px; border-radius:14px;
+    border:2px solid transparent; box-shadow:0 4px 12px var(--shadow);
+    transition:transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  }
+  .link-row:hover{ transform:translateY(-2px); box-shadow:0 8px 18px var(--shadow); border-color:var(--accent); }
+  .link-ico{
+    width:38px; height:38px; border-radius:11px; flex:0 0 auto; color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+  }
+  .link-ico.gh{ background:linear-gradient(180deg,#5c6370,#24292f); }
+  .link-ico.li{ background:linear-gradient(180deg,#4ca0f5,#0a66c2); }
+  .link-ico.ig{ background:linear-gradient(135deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); }
+  .link-ico.ml{ background:linear-gradient(180deg,#f7a97c,#dd6a24); }
+  .link-txt{ display:flex; flex-direction:column; min-width:0; flex:1; }
+  .link-name{ font-family:var(--system-font); font-weight:600; font-size:0.95rem; color:var(--ink); }
+  .link-handle{ font-size:0.78rem; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .link-arrow{ color:var(--ink-soft); flex:0 0 auto; opacity:0.6; transition:opacity 0.15s ease, transform 0.15s ease, color 0.15s ease; }
+  .link-row:hover .link-arrow{ opacity:1; transform:translate(2px,-2px); color:var(--accent-strong); }
+  html.leopard .link-row{ background:var(--white); border:1px solid #55585e; border-radius:9px; box-shadow:0 2px 6px rgba(0,0,0,0.35); }
+  html.leopard .link-row:hover{ border-color:#5b9af0; box-shadow:0 4px 12px rgba(0,0,0,0.45); }
+  html.hacker .link-row{ background:var(--paper); border:1px solid var(--ink-soft); box-shadow:none; }
+  html.hacker.leopard .link-row{ background:var(--paper); border:1px solid var(--ink-soft); box-shadow:none; }
 
   .btn{
     font-family:var(--system-font); font-size:12px; font-weight:600;
@@ -423,58 +452,50 @@
   html.leopard #icon-installer .moon{ display:none; }
   html.leopard #icon-installer .sun{ display:block; }
 
-  /* ===== DOCK (both modes) ===== */
-  #dock{
-    position:fixed; left:50%; bottom:8px; transform:translateX(-50%); z-index:4500;
-    display:flex; align-items:flex-end; gap:8px; padding:7px 10px;
-    background:linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.28));
-    backdrop-filter: blur(18px) saturate(1.4);
-    -webkit-backdrop-filter: blur(18px) saturate(1.4);
-    border:1px solid rgba(75,63,99,0.25); border-radius:18px;
-    box-shadow:0 10px 30px rgba(75,63,99,0.25), inset 0 1px 0 rgba(255,255,255,0.8);
-    user-select:none; max-width:96vw;
+  /* ===== HACKER MODE + DARK MODE =====
+     html.leopard is defined later than html.hacker, so its variables used to win
+     when both modes were on, leaving a blue/gray mix instead of the green terminal
+     look. This block restores the full hacker palette with higher specificity. */
+  html.hacker.leopard{
+    --lavender:#0d1410;
+    --blush:#0d1410;
+    --mint:#0d1410;
+    --butter:#0d1410;
+    --sky:#0d1410;
+    --plum:#39ff8f;
+    --plum-soft:#2fce74;
+    --periwinkle:#39ff8f;
+    --white:#0f1713;
+
+    --chrome:#0f1713;
+    --chrome-stripe:#132018;
+    --ink:#39ff8f;
+    --ink-soft:#2fce74;
+    --accent:#39ff8f;
+    --accent-strong:#1fae63;
+    --paper:#0c110d;
+    --shadow: rgba(57,255,143,0.25);
+    --system-font:'Space Mono', monospace;
+    --body-font:'Space Mono', monospace;
   }
-  html.leopard #dock{
-    background:linear-gradient(180deg, rgba(255,255,255,0.10), rgba(0,0,0,0.18));
-    border-color:rgba(255,255,255,0.18);
-    box-shadow:0 10px 30px rgba(0,5,25,0.6), inset 0 1px 0 rgba(255,255,255,0.12);
+  /* components that dark mode restyles with hardcoded colors get the terminal look back */
+  html.hacker.leopard .pill{ background:var(--paper); border:1px solid var(--ink-soft); box-shadow:none; color:var(--ink); }
+  html.hacker.leopard .badge{ background:var(--paper); border:1px solid var(--ink-soft); color:var(--ink-soft); box-shadow:none; }
+  html.hacker.leopard .field input, html.hacker.leopard .field textarea{
+    background:var(--paper); border:1px solid var(--ink-soft); box-shadow:none; border-radius:6px;
   }
-  html.hacker.leopard #dock{
-    background:linear-gradient(180deg, rgba(57,255,143,0.10), rgba(57,255,143,0.04));
-    border-color:rgba(57,255,143,0.35);
-    box-shadow:0 10px 30px rgba(0,10,4,0.8), inset 0 1px 0 rgba(57,255,143,0.25);
-  }
-  .dock-item{ position:relative; display:flex; flex-direction:column; align-items:center; }
-  .dock-item .glyph{
-    width:46px; height:46px; border-radius:11px;
-    display:flex; align-items:center; justify-content:center; cursor:pointer; color:#fff;
-    box-shadow:0 3px 8px rgba(0,5,25,0.45), inset 0 1px 0 rgba(255,255,255,0.4);
-    transition:transform 0.18s cubic-bezier(.34,1.4,.64,1);
-  }
-  .dock-item:hover .glyph{ transform:translateY(-14px) scale(1.25); }
-  .dock-item .tooltip{
-    position:absolute; top:-34px; left:50%; transform:translateX(-50%);
-    background:rgba(20,26,45,0.9); color:#fff; font-size:11px; font-weight:600;
-    padding:3px 9px; border-radius:6px; white-space:nowrap;
-    opacity:0; pointer-events:none; transition:opacity 0.15s ease;
-    text-shadow:none; z-index:10;
-  }
-  .dock-item:hover .tooltip{ opacity:1; }
-  .dock-item .dot{
-    width:4px; height:4px; border-radius:50%; background:var(--ink-soft);
-    margin-top:3px; opacity:0; transition:opacity 0.2s ease;
-  }
-  html.leopard .dock-item .dot{ background:rgba(255,255,255,0.9); }
-  html.hacker.leopard .dock-item .dot{ background:#39ff8f; }
-  .dock-item.running .dot{ opacity:1; }
-  #dock .dock-sep{ width:1px; align-self:stretch; margin:4px 3px; background:rgba(75,63,99,0.25); }
-  html.leopard #dock .dock-sep{ background:rgba(255,255,255,0.35); }
+  html.hacker.leopard .btn.ghost{ background:var(--paper); color:var(--ink); border:1px solid var(--ink-soft); }
+  html.hacker.leopard .project .tag{ background:var(--paper); border:1px solid var(--ink-soft); color:var(--ink); }
+  html.hacker.leopard .link-btn{ background:var(--paper); border:1px solid var(--ink-soft); }
+  html.hacker.leopard .icon .label{ color:#39ff8f; text-shadow:none; }
+  html.hacker.leopard .icon.selected{ background:rgba(57,255,143,0.18); border-color:rgba(57,255,143,0.5); }
+  html.hacker.leopard .avatar img{ border-color:var(--accent); }
+  html.hacker.leopard .avatar.noimg .avatar-fallback{ border-color:var(--accent-strong); }
 
   @media (max-width:720px){
     .win{ width:90vw !important; left:5vw !important; min-width:0; }
     #icons{ right:0; left:0; align-content:flex-start; flex-direction:row; flex-wrap:wrap; justify-content:flex-end; }
     #icons-left{ left:0; right:0; align-content:flex-start; flex-direction:row; flex-wrap:wrap; justify-content:flex-start; bottom:auto; top:auto; }
-    .dock-item .glyph{ width:38px; height:38px; }
   }
 </style>
 </head>
@@ -517,7 +538,6 @@
       <div class="row highlight" data-open="about">About Kasper Jonassen…</div>
       <div class="sep"></div>
       <div class="row" id="toggle-hacker">Hacker Mode</div>
-      <div class="row" id="toggle-leopard-row">Dark Mode</div>
       <div class="sep"></div>
       <div class="row" id="restart-row">Restart</div>
       <div class="row" id="shutdown-row">Shut Down</div>
@@ -659,14 +679,30 @@
   </div>
 
   <!-- LINKS WINDOW -->
-  <div class="win" id="win-links" data-x="30" data-y="46" style="left:40%; top:6%; width:150px;">
+  <div class="win" id="win-links" data-x="40" data-y="6" style="left:40%; top:6%; width:300px;">
     <div class="titlebar"><div class="box" data-close="links"></div><div class="lights"><div class="light close" data-close="links"></div><div class="light min" data-min="links"></div><div class="light max" data-max="links"></div></div><div class="title">Links</div></div>
-    <div class="win-body">
-      <div class="links">
-        <a class="link-btn gh" href="https://github.com/kappertherapper" target="_blank" rel="noopener">GitHub</a>
-        <a class="link-btn li" href="https://www.linkedin.com/in/kasperjonassen" target="_blank" rel="noopener">LinkedIn</a>
-        <a class="link-btn ig" href="https://www.instagram.com/kasperkage/" target="_blank" rel="noopener">Instagram</a>
-        <a class="link-btn ig" href="mailto:kasperjonassen@yahoo.dk">Mail</a>
+    <div class="win-body" style="padding:14px;">
+      <div class="link-list">
+        <a class="link-row" href="https://github.com/kappertherapper" target="_blank" rel="noopener">
+          <span class="link-ico gh"><svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></span>
+          <span class="link-txt"><span class="link-name">GitHub</span><span class="link-handle">@kappertherapper</span></span>
+          <span class="link-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+        <a class="link-row" href="https://www.linkedin.com/in/kasperjonassen" target="_blank" rel="noopener">
+          <span class="link-ico li"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.5c0-1.3-.02-3-1.83-3-1.83 0-2.1 1.43-2.1 2.9V21H9z"/></svg></span>
+          <span class="link-txt"><span class="link-name">LinkedIn</span><span class="link-handle">in/kasperjonassen</span></span>
+          <span class="link-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+        <a class="link-row" href="https://www.instagram.com/kasperkage/" target="_blank" rel="noopener">
+          <span class="link-ico ig"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2.8" y="2.8" width="18.4" height="18.4" rx="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8"/><circle cx="17.2" cy="6.8" r="1.3" fill="currentColor"/></svg></span>
+          <span class="link-txt"><span class="link-name">Instagram</span><span class="link-handle">@kasperkage</span></span>
+          <span class="link-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+        <a class="link-row" href="mailto:kasperjonassen@yahoo.dk">
+          <span class="link-ico ml"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="m4 7 8 6.5L20 7" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span>
+          <span class="link-txt"><span class="link-name">Mail</span><span class="link-handle">kasperjonassen@yahoo.dk</span></span>
+          <span class="link-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
       </div>
     </div>
     <div class="resize-handle"></div>
@@ -776,20 +812,6 @@
   </footer>
 </div>
 
-<!-- ===== DOCK (Leopard mode only) ===== -->
-<div id="dock">
-  <div class="dock-item" data-dock="about"><div class="tooltip">About Me</div><div class="glyph tile-a"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="10" r="1.4" fill="currentColor"/><circle cx="15" cy="10" r="1.4" fill="currentColor"/><path d="M8.5 15c1.2 1.2 5.8 1.2 7 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="dot"></div></div>
-  <div class="dock-item" data-dock="skills"><div class="tooltip">Skills</div><div class="glyph tile-b"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M14.5 4.5a4.2 4.2 0 0 0-5.6 5.4L3.8 15a1.8 1.8 0 0 0 2.5 2.5l5.1-5.1a4.2 4.2 0 0 0 5.4-5.6l-2.6 2.6-2.4-.8-.8-2.4 2.5-2.7Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></div><div class="dot"></div></div>
-  <div class="dock-item" data-dock="projects"><div class="tooltip">Projects</div><div class="glyph tile-c"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M7 9l3 2.5L7 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12.5 15h4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="dot"></div></div>
-  <div class="dock-item" data-dock="links"><div class="tooltip">Links</div><div class="glyph tile-d"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M9.5 14.5 14.5 9.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 6.5 13.8 4.7a3.9 3.9 0 0 1 5.5 5.5l-1.8 1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 17.5l-1.8 1.8a3.9 3.9 0 0 1-5.5-5.5l1.8-1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="dot"></div></div>
-  <div class="dock-item" data-dock="cv"><div class="tooltip">CV</div><div class="glyph tile-e"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M6 3h8l4 4v14H6V3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 3v4h4" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 12h6M9 15.5h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div><div class="dot"></div></div>
-  <div class="dock-item" data-dock="contact"><div class="tooltip">Contact</div><div class="glyph tile-f"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="m4 7 8 6.5L20 7" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></div><div class="dot"></div></div>
-  <div class="dock-item" data-dock="translate"><div class="tooltip">Translate</div><div class="glyph tile-c"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 12h17M12 3.5c2.6 2.6 2.6 14.4 0 17M12 3.5c-2.6 2.6-2.6 14.4 0 17" stroke="currentColor" stroke-width="1.6"/></svg></div><div class="dot"></div></div>
-  <div class="dock-item" data-dock="socials"><div class="tooltip">Socials</div><div class="glyph tile-d"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 6a2.5 2.5 0 0 1 2.5-2.5h11A2.5 2.5 0 0 1 20 6v8a2.5 2.5 0 0 1-2.5 2.5H9L4.5 20.5V6Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.5 9.5h7M8.5 12.5h4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div><div class="dot"></div></div>
-  <div class="dock-sep"></div>
-  <div class="dock-item" data-dock="warning"><div class="tooltip">Trash</div><div class="glyph tile-f"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M6 7l1 12.5h10L18 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7" stroke="currentColor" stroke-width="1.8"/><path d="M10.3 10.5v5.5M13.7 10.5v5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="dot"></div></div>
-</div>
-
 <script>
 (function(){
   "use strict";
@@ -830,13 +852,12 @@
   $("#quit-row").addEventListener("click", ()=> showAlert("Nice try. This desktop never quits, it is a website, not an OS."));
   $("#restart-row").addEventListener("click", ()=> showAlert("Restarting… (just kidding, keep looking around)"));
   $("#shutdown-row").addEventListener("click", ()=> showAlert("This computer is a website. It cannot be shut down."));
-  $("#spotlight").addEventListener("click", ()=> showAlert("Spotlight is on a coffee break. Try the dock instead."));
+  $("#spotlight").addEventListener("click", ()=> showAlert("Spotlight is on a coffee break. Try the desktop icons instead."));
   $("#reset-layout").addEventListener("click", resetLayout);
   $("#zoom-in").addEventListener("click", ()=> setZoom(zoomLevel+0.1));
   $("#zoom-out").addEventListener("click", ()=> setZoom(zoomLevel-0.1));
   $("#zoom-actual").addEventListener("click", ()=> setZoom(1));
   $("#toggle-hacker").addEventListener("click", toggleHacker);
-  $("#toggle-leopard-row").addEventListener("click", ()=> setLeopard(!leopardOn()));
   $("#menu-contact-btn").addEventListener("click", ()=> openWin("contact"));
   $("#contact-send").addEventListener("click", ()=>{
     const name = $("#contact-name").value.trim();
@@ -888,9 +909,7 @@
   function setLeopard(on){
     document.documentElement.classList.toggle("leopard", on);
     $("#installer-label").textContent = on ? "Light Mode" : "Dark Mode";
-    $("#toggle-leopard-row").textContent = on ? "Light Mode" : "Dark Mode";
     try{ localStorage.setItem("kasper-leopard", on ? "1" : "0"); }catch(err){}
-    refreshDock();
   }
   const installer = $("#icon-installer");
   installer.addEventListener("click", ()=>{
@@ -970,7 +989,6 @@
     win.style.display = "flex";
     minimized.delete(name);
     focusWin(name);
-    refreshDock();
   }
   function closeWin(name){
     const win = $("#win-"+name);
@@ -978,14 +996,12 @@
     win.classList.remove("open");
     win.style.display = "none";
     minimized.delete(name);
-    refreshDock();
   }
   function minimizeWin(name){
     const win = $("#win-"+name);
     if(!win || !win.classList.contains("open")) return;
     win.style.display = "none";
     minimized.add(name);
-    refreshDock();
   }
   function maximizeWin(name){
     const win = $("#win-"+name);
@@ -1002,11 +1018,11 @@
       win.dataset.prevW = win.style.width;
       win.dataset.prevH = win.style.height;
       const pad = 12;
-      const dockClear = 72;
+      const bottomClear = 24;
       win.style.left = pad+"px";
       win.style.top = (30+pad)+"px";
       win.style.width = "calc(100vw - "+(pad*2)+"px)";
-      win.style.height = "calc(100vh - "+(30+pad+dockClear)+"px)";
+      win.style.height = "calc(100vh - "+(30+pad+bottomClear)+"px)";
       win.dataset.maxed = "1";
     }
     focusWin(name);
@@ -1029,23 +1045,6 @@
       w.dataset.maxed = "";
     });
   }
-
-  /* ---------- DOCK (Leopard mode) ---------- */
-  function refreshDock(){
-    $all(".dock-item[data-dock]").forEach(item=>{
-      const win = $("#win-"+item.dataset.dock);
-      item.classList.toggle("running", !!(win && win.classList.contains("open")));
-    });
-  }
-  $all(".dock-item[data-dock]").forEach(item=>{
-    item.addEventListener("click", ()=>{
-      const name = item.dataset.dock;
-      const win = $("#win-"+name);
-      if(!win || !win.classList.contains("open")){ openWin(name); return; }
-      if(minimized.has(name)){ openWin(name); return; }
-      focusWin(name);
-    });
-  });
 
   $all("[data-close]").forEach(el=> el.addEventListener("click", e=>{ e.stopPropagation(); closeWin(el.dataset.close); }));
   $all("[data-min]").forEach(el=> el.addEventListener("click", e=>{ e.stopPropagation(); minimizeWin(el.dataset.min); }));
@@ -1196,7 +1195,6 @@
 
   /* ---------- INIT ---------- */
   focusWin("about");
-  refreshDock();
 
   /* ---------- DEEP LINKING (e.g. index.html#cv opens the CV window) ---------- */
   function openFromHash(){
