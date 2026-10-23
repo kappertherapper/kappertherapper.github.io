@@ -318,6 +318,7 @@
   .link-ico.li{ background:linear-gradient(180deg,#4ca0f5,#0a66c2); }
   .link-ico.ig{ background:linear-gradient(135deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); }
   .link-ico.ml{ background:linear-gradient(180deg,#f7a97c,#dd6a24); }
+  .link-ico.thm{ background:linear-gradient(180deg,#3d6fd6,#212c4f); }
   .link-txt{ display:flex; flex-direction:column; min-width:0; flex:1; }
   .link-name{ font-family:var(--system-font); font-weight:600; font-size:0.95rem; color:var(--ink); }
   .link-handle{ font-size:0.78rem; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -535,8 +536,6 @@
       </svg>
     </div>
     <div class="menu-dropdown">
-      <div class="row highlight" data-open="about">About Kasper Jonassen…</div>
-      <div class="sep"></div>
       <div class="row" id="toggle-hacker">Hacker Mode</div>
       <div class="sep"></div>
       <div class="row" id="restart-row">Restart</div>
@@ -704,6 +703,11 @@
         <a class="link-row" href="https://www.instagram.com/kasperkage/" target="_blank" rel="noopener">
           <span class="link-ico ig"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2.8" y="2.8" width="18.4" height="18.4" rx="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8"/><circle cx="17.2" cy="6.8" r="1.3" fill="currentColor"/></svg></span>
           <span class="link-txt"><span class="link-name">Instagram</span><span class="link-handle">@kasperkage</span></span>
+          <span class="link-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+        <a class="link-row" href="https://tryhackme.com/p/kasperjonassen" target="_blank" rel="noopener">
+          <span class="link-ico thm"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2.5 20 5.5v6c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10v-6l8-3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m8.5 12 2.5 2.5 4.5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span class="link-txt"><span class="link-name">TryHackMe</span><span class="link-handle">@kasperjonassen</span></span>
           <span class="link-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </a>
         <a class="link-row" href="mailto:kasperjonassen@yahoo.dk">
@@ -907,7 +911,8 @@
   }
 
   function toggleHacker(){
-    document.documentElement.classList.toggle("hacker");
+    const on = document.documentElement.classList.toggle("hacker");
+    $("#toggle-hacker").textContent = on ? "Hacker Mode Off" : "Hacker Mode";
   }
 
   /* ---------- DARK MODE (install icon) ---------- */
@@ -1215,5 +1220,6 @@
   window.addEventListener("hashchange", openFromHash);
 })();
 </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" nonce="Q0a4W9tG1VrbrgFcEQNC6Q==" data-cf-beacon='{"version":"2024.11.0","token":"36b4216ae2dc4d5488c249161e71fe1e","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
