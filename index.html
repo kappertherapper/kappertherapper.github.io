@@ -719,9 +719,9 @@
         <span class="link-txt"><span class="link-name">Vinted</span><span class="link-handle">kasperjonassen</span></span>
         <span class="link-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </a>
-        <a class="link-row" href="mailto:kasperjonassen@yahoo.dk">
+        <a class="link-row" href="mailto:hej@kasper.fyi">
           <span class="link-ico ml"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="m4 7 8 6.5L20 7" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span>
-          <span class="link-txt"><span class="link-name">Mail</span><span class="link-handle">kasperjonassen@yahoo.dk</span></span>
+          <span class="link-txt"><span class="link-name">Mail</span><span class="link-handle">hej@kasper.fyi</span></span>
           <span class="link-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </a>
       </div>
@@ -744,7 +744,7 @@
       <div class="field"><label>You email</label><input type="email" id="contact-email"></div>
       <div class="field"><label>Message</label><textarea id="contact-message" rows="5"></textarea></div>
       <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; gap:10px; flex-wrap:wrap;">
-        <span style="font-size:0.78rem; color:var(--ink-soft);">Goes to kasperjonassen@yahoo.dk</span>
+        <span style="font-size:0.78rem; color:var(--ink-soft);">Goes to hej@kasper.fyi</span>
         <button class="btn" id="contact-send">Send</button>
       </div>
     </div>
@@ -891,7 +891,7 @@
     if(name) bodyLines.push("Navn: " + name);
     if(email) bodyLines.push("Email: " + email);
     const body = encodeURIComponent(bodyLines.join("\n"));
-    window.location.href = "mailto:kasperjonassen@yahoo.dk?subject=" + subject + "&body=" + body;
+    window.location.href = "mailto:hej@kasper.fyi?subject=" + subject + "&body=" + body;
   });
   $("#new-text-window").addEventListener("click", ()=> openWin("newtext"));
   $("#newtext-create").addEventListener("click", createTextWindow);
