@@ -152,8 +152,9 @@
   #menubar .right{ margin-left:auto; display:flex; align-items:center; gap:14px; padding-right:16px; }
   #clock{ font-family:var(--system-font); font-size:12px; color:var(--ink-soft); }
 
-  #spotlight{ display:none; align-items:center; cursor:pointer; color:inherit; }
-  html.leopard #spotlight{ display:flex; }
+  #spotlight{ display:flex; align-items:center; cursor:pointer; color:var(--ink-soft); }
+  #spotlight:hover{ color:var(--accent-strong); }
+  html.leopard #spotlight{ color:#fff; }
 
   /* ===== profile button (top right) ===== */
   .menu-item.profile{ padding:0 12px; }
@@ -351,7 +352,7 @@
     border:1.5px solid var(--chrome-stripe); border-radius:10px; background:var(--white); color:var(--ink);
     resize:vertical;
   }
-  html.leopard .field input, html.leopard .field textarea{ border-radius:7px; border-color:#55585e; box-shadow:inset 0 1px 3px rgba(0,0,0,0.35); }
+  html.leopard .field input, html.leopard .field textarea{ background:#1e2024; border-radius:7px; border-color:#55585e; box-shadow:inset 0 1px 3px rgba(0,0,0,0.35); }
   .field input:focus, .field textarea:focus{ outline:2px solid var(--accent); outline-offset:1px; }
   #win-contact .field label{ font-size:0.85rem; letter-spacing:0; font-weight:600; color:var(--ink); }
 
@@ -493,6 +494,109 @@
   html.hacker.leopard .avatar img{ border-color:var(--accent); }
   html.hacker.leopard .avatar.noimg .avatar-fallback{ border-color:var(--accent-strong); }
 
+  /* ===== SHORTCUTS EXPLAINER ===== */
+  .kb-row{ display:flex; align-items:center; gap:12px; padding:9px 0; border-bottom:1px dashed var(--chrome-stripe); }
+  .kb-row:last-child{ border-bottom:none; }
+  .kb-keys{ display:flex; gap:4px; flex:0 0 auto; }
+  .kb-key{
+    font-family:var(--system-font); font-size:0.72rem; font-weight:600;
+    background:var(--white); color:var(--ink); border:1.5px solid var(--chrome-stripe);
+    border-bottom-width:3px; border-radius:7px; padding:3px 8px; min-width:24px; text-align:center;
+  }
+  html.hacker .kb-key{ background:var(--paper); border-color:var(--ink-soft); }
+  html.leopard .kb-key{ background:var(--paper); border-color:#55585e; border-radius:6px; box-shadow:inset 0 1px 2px rgba(0,0,0,0.3); }
+  .kb-desc{ color:var(--ink-soft); font-size:0.86rem; line-height:1.45; }
+
+  /* ===== TRANSLATE ===== */
+  .tr-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .tr-col{ display:flex; flex-direction:column; gap:6px; min-width:0; }
+  .tr-head{ display:flex; justify-content:space-between; align-items:center; height:26px; }
+  .tr-lang{ font-family:var(--system-font); font-size:0.72rem; letter-spacing:0.04em; color:var(--ink-soft); font-weight:600; }
+  .tr-col textarea{
+    font-family:var(--body-font); font-size:0.92rem; line-height:1.5;
+    padding:9px 12px; width:100%; height:132px; resize:vertical;
+    border:1.5px solid var(--chrome-stripe); border-radius:10px;
+    background:var(--white); color:var(--ink);
+  }
+  html.hacker .tr-col textarea{ background:var(--paper); border-color:var(--ink-soft); border-radius:6px; box-shadow:none; }
+  html.leopard .tr-col textarea{ background:#1e2024; border-radius:7px; border-color:#55585e; box-shadow:inset 0 1px 3px rgba(0,0,0,0.35); }
+  .tr-count{ font-size:0.66rem; color:var(--ink-soft); opacity:0.75; }
+  .tr-copy{
+    font-family:var(--system-font); font-size:0.66rem; font-weight:600;
+    background:var(--white); color:var(--ink-soft); border:1.5px solid var(--chrome-stripe);
+    border-radius:999px; padding:3px 10px; cursor:pointer;
+  }
+  .tr-copy:hover{ color:var(--ink); border-color:var(--accent); }
+  .tr-done{ border-color:var(--accent-strong); color:var(--accent-strong); }
+  html.hacker .tr-copy{ background:var(--paper); border-color:var(--ink-soft); }
+  html.leopard .tr-copy{ background:var(--paper); border-color:#55585e; border-radius:6px; }
+  @media (max-width:560px){ .tr-grid{ grid-template-columns:1fr; } }
+
+  /* ===== DOCK ===== */
+  #dock{
+    position:fixed; left:50%; bottom:8px; transform:translateX(-50%);
+    display:flex; align-items:center; gap:2px; max-width:96vw; overflow-x:auto;
+    background:var(--chrome); border:2px solid var(--ink); border-radius:16px;
+    box-shadow:0 10px 26px var(--shadow);
+    padding:6px 8px; z-index:4500; font-family:var(--system-font); font-size:12px;
+  }
+  #dock:empty{ display:none; }
+  .dock-item{
+    display:flex; align-items:center; gap:7px; padding:7px 12px; border-radius:10px;
+    cursor:pointer; color:var(--ink); user-select:none; white-space:nowrap; flex:0 0 auto;
+  }
+  .dock-item:hover{ background:var(--accent); color:var(--white); }
+  html.hacker .dock-item:hover{ color:#08120c; }
+  .dock-item.active{ background:var(--chrome-stripe); }
+  .dock-dot{ width:7px; height:7px; border-radius:50%; background:var(--accent-strong); flex:0 0 auto; }
+  .dock-item.minned .dock-dot{ background:transparent; border:1.5px solid var(--ink-soft); }
+  html.leopard #dock{
+    background:rgba(38,41,46,0.85); border:1px solid rgba(0,0,0,0.55); border-radius:12px;
+    backdrop-filter:blur(14px) saturate(1.5); -webkit-backdrop-filter:blur(14px) saturate(1.5);
+    box-shadow:0 14px 30px rgba(0,5,25,0.6);
+  }
+  html.hacker.leopard #dock{ background:rgba(6,16,10,0.9); border-color:rgba(57,255,143,0.4); }
+  html.leopard .dock-item:hover{ background:linear-gradient(180deg,#5b9af0,#2f68c4); color:#fff; }
+  html.hacker.leopard .dock-item:hover{ background:linear-gradient(180deg,#1fae63,#0d6e3a); color:#04120a; }
+
+  /* ===== SPOTLIGHT OVERLAY ===== */
+  #spotlight-overlay{
+    display:none; position:fixed; inset:0; z-index:7000;
+    background:rgba(75,63,99,0.25);
+    align-items:flex-start; justify-content:center; padding-top:14vh;
+  }
+  #spotlight-overlay.open{ display:flex; }
+  html.leopard #spotlight-overlay, html.hacker.leopard #spotlight-overlay{ background:rgba(0,0,0,0.45); }
+  #spotlight-panel{
+    width:min(560px, 92vw); background:var(--chrome); border:2px solid var(--ink);
+    border-radius:16px; box-shadow:0 24px 60px var(--shadow); overflow:hidden;
+  }
+  #spotlight-head{ display:flex; align-items:center; gap:10px; padding:14px 16px; }
+  #spotlight-head svg{ flex:0 0 auto; }
+  #spotlight-input{
+    flex:1; border:none; background:transparent; color:var(--ink);
+    font-family:var(--system-font); font-size:16px; outline:none; min-width:0;
+  }
+  #spotlight-input::placeholder{ color:var(--ink-soft); opacity:0.7; }
+  #spotlight-hint{ font-size:0.66rem; color:var(--ink-soft); border:1px solid var(--chrome-stripe); padding:2px 7px; border-radius:6px; flex:0 0 auto; }
+  #spotlight-results{ display:none; max-height:42vh; overflow:auto; border-top:2px solid var(--chrome-stripe); }
+  #spotlight-results.has{ display:block; }
+  .spot-row{ display:flex; align-items:center; gap:10px; padding:10px 16px; cursor:pointer; color:var(--ink); font-size:0.9rem; }
+  .spot-row .spot-label{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .spot-row:hover, .spot-row.sel{ background:var(--accent); color:var(--white); }
+  html.hacker .spot-row:hover, html.hacker .spot-row.sel{ color:#08120c; }
+  html.leopard .spot-row:hover, html.leopard .spot-row.sel{ background:linear-gradient(180deg,#5b9af0,#2f68c4); color:#fff; }
+  html.hacker.leopard .spot-row:hover, html.hacker.leopard .spot-row.sel{ background:linear-gradient(180deg,#1fae63,#0d6e3a); color:#04120a; }
+  .spot-row .spot-kind{ margin-left:auto; flex:0 0 auto; font-size:0.66rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--ink-soft); }
+  .spot-row:hover .spot-kind, .spot-row.sel .spot-kind{ color:inherit; opacity:0.85; }
+  .spot-empty{ padding:12px 16px; color:var(--ink-soft); font-size:0.85rem; }
+  html.leopard #spotlight-panel{
+    background:rgba(38,41,46,0.97); border:1px solid rgba(0,0,0,0.6); border-radius:10px;
+    backdrop-filter:blur(16px) saturate(1.4); -webkit-backdrop-filter:blur(16px) saturate(1.4);
+  }
+  html.hacker.leopard #spotlight-panel{ background:rgba(6,16,10,0.96); border-color:rgba(57,255,143,0.4); }
+  html.leopard #spotlight-results{ border-top:1px solid rgba(255,255,255,0.12); }
+
   @media (max-width:720px){
     .win{ width:90vw !important; left:5vw !important; min-width:0; }
     #icons{ right:0; left:0; align-content:flex-start; flex-direction:row; flex-wrap:wrap; justify-content:flex-end; }
@@ -544,30 +648,32 @@
   </div>
   <div class="menu-item" data-menu="file">File
     <div class="menu-dropdown">
-      <div class="row" id="new-text-window">Open Text Window… <span class="kbd">⌘T</span></div>
-      <div class="row" data-close-active="1">Close Window <span class="kbd">⌘W</span></div>
+      <div class="row" id="new-text-window">Open Text Window… <span class="kbd">T</span></div>
+      <div class="row" data-close-active="1">Close Window <span class="kbd">W</span></div>
       <div class="row" id="close-all">Close All Windows</div>
       <div class="sep"></div>
-      <div class="row" id="quit-row">Quit <span class="kbd">⌘Q</span></div>
+      <div class="row" id="quit-row">Quit</div>
     </div>
   </div>
   <div class="menu-item" data-menu="view">View
     <div class="menu-dropdown">
       <div class="row" id="reset-layout">Reset Window Layout</div>
       <div class="sep"></div>
-      <div class="row" id="zoom-in">Zoom In <span class="kbd">⌘+</span></div>
-      <div class="row" id="zoom-out">Zoom Out <span class="kbd">⌘-</span></div>
-      <div class="row" id="zoom-actual">Actual Size <span class="kbd">⌘0</span></div>
+      <div class="row" id="zoom-in">Zoom In <span class="kbd">+</span></div>
+      <div class="row" id="zoom-out">Zoom Out <span class="kbd">-</span></div>
+      <div class="row" id="zoom-actual">Actual Size <span class="kbd">0</span></div>
     </div>
   </div>
   <div class="menu-item" data-menu="help">Help
     <div class="menu-dropdown">
+      <div class="row" data-open="shortcuts">Keyboard Shortcuts</div>
+      <div class="sep"></div>
       <div class="row" data-open="socials">Socials</div>
     </div>
   </div>
   <div class="menu-item" id="menu-contact-btn">Contact</div>
   <div class="right">
-    <div id="spotlight" title="Spotlight">
+    <div id="spotlight" title="Spotlight (Cmd/Ctrl+K)">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="2.4"/>
         <path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
@@ -589,6 +695,7 @@
   <div class="icon" id="icon-installer"><div class="glyph tile-f"><svg class="moon" width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M20.5 13.5A8.5 8.5 0 1 1 10.5 3.5a7 7 0 0 0 10 10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><svg class="sun" width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="label" id="installer-label">Dark Mode</div></div>
   <div class="icon" data-open="translate"><div class="glyph tile-c"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 12h17M12 3.5c2.6 2.6 2.6 14.4 0 17M12 3.5c-2.6 2.6-2.6 14.4 0 17" stroke="currentColor" stroke-width="1.6"/></svg></div><div class="label">Translate</div></div>
   <div class="icon" data-open="warning"><div class="glyph tile-e"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M6 7l1 12.5h10L18 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7" stroke="currentColor" stroke-width="1.8"/><path d="M10.3 10.5v5.5M13.7 10.5v5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="label">Trash</div></div>
+  <div class="icon" data-open="shortcuts"><div class="glyph tile-d"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="2.5" y="6" width="19" height="12" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M6 9.5h.01M9.5 9.5h.01M13 9.5h.01M16.5 9.5h.01M6 12.5h.01M9.5 12.5h.01M13 12.5h.01M16.5 12.5h.01M8 15.5h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><div class="label">Shortcuts</div></div>
 </div>
 
 <div id="desktop">
@@ -604,13 +711,12 @@
       <p class="sub">So I found a passion in cybersecurity and now, i’m giving my everything to try and learn all about it.</p>
       <p class="sub">The balance between offense and defense and understanding the critical part of protecting what can be exploited.</p>
       <span class="pill p1">📍 Aarhus, Denmark</span>
-      <br></br>
     </div>
     <div class="resize-handle"></div>
   </div>
 
   <!-- SKILLS WINDOW -->
-  <div class="win" id="win-skills" data-x="46" data-y="16" style="left:46%; top:16%; width:380px;">
+  <div class="win" id="win-skills" data-x="48" data-y="14" style="left:48%; top:14%; width:480px;">
     <div class="titlebar"><div class="box" data-close="skills"></div><div class="lights"><div class="light close" data-close="skills"></div><div class="light min" data-min="skills"></div><div class="light max" data-max="skills"></div></div><div class="title">Skills</div></div>
     <div class="win-body">
       <div class="pills">
@@ -655,7 +761,7 @@
   </div>
 
   <!-- PROJECTS WINDOW -->
-  <div class="win" id="win-projects" data-x="14" data-y="30" style="left:44%; top:15%; width:420px;">
+  <div class="win" id="win-projects" data-x="20" data-y="12" style="left:20%; top:12%; width:520px;">
     <div class="titlebar"><div class="box" data-close="projects"></div><div class="lights"><div class="light close" data-close="projects"></div><div class="light min" data-min="projects"></div><div class="light max" data-max="projects"></div></div><div class="title">Projects</div></div>
     <div class="win-body">
       <div class="project">
@@ -680,13 +786,12 @@
         <p>Fetches the top front-page stories from the HN Algolia API, and uses Mistral chat API to generate highlights and summaries.</p>
         <div><a class="project-link" href="https://github.com/kappertherapper/hn-digest" target="_blank" rel="noopener">Link</a></div>
       </div>
-      </div>
     </div>
     <div class="resize-handle"></div>
   </div>
 
   <!-- LINKS WINDOW -->
-  <div class="win" id="win-links" data-x="40" data-y="6" style="left:40%; top:6%; width:300px;">
+  <div class="win" id="win-links" data-x="66" data-y="14" style="left:66%; top:14%; width:300px;">
     <div class="titlebar"><div class="box" data-close="links"></div><div class="lights"><div class="light close" data-close="links"></div><div class="light min" data-min="links"></div><div class="light max" data-max="links"></div></div><div class="title">Links</div></div>
     <div class="win-body" style="padding:14px;">
       <div class="link-list">
@@ -730,18 +835,18 @@
   </div>
 
   <!-- CONTACT WINDOW -->
-  <div class="win" id="win-contact" data-x="30" data-y="46" style="left:30%; top:46%; width:360px;">
+  <div class="win" id="win-contact" data-x="34" data-y="48" style="left:34%; top:48%; width:360px;">
     <div class="titlebar"><div class="box" data-close="contact"></div><div class="lights"><div class="light close" data-close="contact"></div><div class="light min" data-min="contact"></div><div class="light max" data-max="contact"></div></div><div class="title">Contact</div></div>
     <div class="win-body" style="text-align:left;">
       <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:18px;">
         <div style="flex:0 0 auto;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="display:block;"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="var(--ink-soft)" stroke-width="1.8"/><path d="m4 7 8 6.5L20 7" stroke="var(--ink-soft)" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
         <div>
           <h3 style="margin:0 0 4px;">Contact</h3>
-          <p class="sub" style="margin:0; font-size:0.88rem;">Questions about something? I usally reply within a day.</p>
+          <p class="sub" style="margin:0; font-size:0.88rem;">Questions about something? I usually reply within a day.</p>
         </div>
       </div>
       <div class="field"><label>Your name</label><input type="text" id="contact-name"></div>
-      <div class="field"><label>You email</label><input type="email" id="contact-email"></div>
+      <div class="field"><label>Your email</label><input type="email" id="contact-email"></div>
       <div class="field"><label>Message</label><textarea id="contact-message" rows="5"></textarea></div>
       <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; gap:10px; flex-wrap:wrap;">
         <span style="font-size:0.78rem; color:var(--ink-soft);">Goes to hej@kasper.fyi</span>
@@ -752,7 +857,7 @@
   </div>
 
   <!-- CV WINDOW -->
-  <div class="win" id="win-cv" data-x="10" data-y="52" style="left:46%; top:4%; width:720px;">
+  <div class="win" id="win-cv" data-x="28" data-y="4" style="left:28%; top:4%; width:720px;">
     <div class="titlebar"><div class="box" data-close="cv"></div><div class="lights"><div class="light close" data-close="cv"></div><div class="light min" data-min="cv"></div><div class="light max" data-max="cv"></div></div><div class="title">CV</div></div>
     <div class="win-body">
       <iframe src="cv_kasperjonassen.pdf" title="CV" style="width:100%; height:750px; border:1.5px solid var(--chrome-stripe); border-radius:10px; background:var(--white);"></iframe>
@@ -766,7 +871,7 @@
   </div>
 
   <!-- SOCIALS WINDOW -->
-  <div class="win" id="win-socials" data-x="40" data-y="26" style="left:40%; top:26%; width:260px;">
+  <div class="win" id="win-socials" data-x="70" data-y="48" style="left:70%; top:48%; width:260px;">
     <div class="titlebar"><div class="box" data-close="socials"></div><div class="lights"><div class="light close" data-close="socials"></div><div class="light min" data-min="socials"></div><div class="light max" data-max="socials"></div></div><div class="title">Socials</div></div>
     <div class="win-body">
       <p style="margin:4px 0;"><strong>GitHub</strong>: @kappertherapper</p>
@@ -776,20 +881,37 @@
     <div class="resize-handle"></div>
   </div>
 
+  <!-- SHORTCUTS WINDOW -->
+  <div class="win" id="win-shortcuts" data-x="18" data-y="46" style="left:18%; top:46%; width:340px;">
+    <div class="titlebar"><div class="box" data-close="shortcuts"></div><div class="lights"><div class="light close" data-close="shortcuts"></div><div class="light min" data-min="shortcuts"></div><div class="light max" data-max="shortcuts"></div></div><div class="title">Shortcuts</div></div>
+    <div class="win-body">
+      <div class="kb-row"><span class="kb-keys"><span class="kb-key">T</span></span><span class="kb-desc">Open a new text window</span></div>
+      <div class="kb-row"><span class="kb-keys"><span class="kb-key">W</span></span><span class="kb-desc">Close active window</span></div>
+      <div class="kb-row"><span class="kb-keys"><span class="kb-key">+</span><span class="kb-key">-</span></span><span class="kb-desc">Zoom in and out</span></div>
+      <div class="kb-row"><span class="kb-keys"><span class="kb-key">0</span></span><span class="kb-desc">Zoom back to normal</span></div>
+      <div class="kb-row"><span class="kb-keys"><span class="kb-key">Cmd/Ctrl</span><span class="kb-key">K</span></span><span class="kb-desc">Open Spotlight</span></div>
+      <div class="kb-row"><span class="kb-keys"><span class="kb-key">Esc</span></span><span class="kb-desc">Close dialog windows</span></div>
+      <p class="sub" style="font-size:0.8rem; margin-top:12px; margin-bottom:0; color:var(--ink-soft);">Double-click a title bar to maximize (do again to restore)</p>
+    </div>
+    <div class="resize-handle"></div>
+  </div>
+
   <!-- TRANSLATE WINDOW -->
-  <div class="win" id="win-translate" data-x="18" data-y="20" style="left:18%; top:20%; width:340px;">
+  <div class="win" id="win-translate" data-x="44" data-y="34" style="left:44%; top:34%; width:560px;">
     <div class="titlebar"><div class="box" data-close="translate"></div><div class="lights"><div class="light close" data-close="translate"></div><div class="light min" data-min="translate"></div><div class="light max" data-max="translate"></div></div><div class="title">Translate (EN → DA)</div></div>
     <div class="win-body" style="text-align:left;">
-      <div class="field">
-        <label>ENGLISH</label>
-        <textarea id="translate-input" rows="4"></textarea>
+      <div class="tr-grid">
+        <div class="tr-col">
+          <div class="tr-head"><span class="tr-lang">ENGLISH</span><span class="tr-count" id="translate-count">0/500</span></div>
+          <textarea id="translate-input" rows="5" maxlength="500" placeholder=""></textarea>
+        </div>
+        <div class="tr-col">
+          <div class="tr-head"><span class="tr-lang">DANISH</span><button class="tr-copy" id="translate-copy" type="button">Kopiér</button></div>
+          <textarea id="translate-output" rows="5" readonly tabindex="-1" placeholder=""></textarea>
+        </div>
       </div>
-      <div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
+      <div style="display:flex; justify-content:flex-end; margin-top:12px;">
         <button class="btn" id="translate-btn">Oversæt</button>
-      </div>
-      <div class="field">
-        <label>DANSK</label>
-        <textarea id="translate-output" rows="4"readonly></textarea>
       </div>
     </div>
     <div class="resize-handle"></div>
@@ -833,6 +955,21 @@
   </footer>
 </div>
 
+<!-- DOCK: shows every open or minimized window -->
+<div id="dock"></div>
+
+<!-- SPOTLIGHT: search windows and links -->
+<div id="spotlight-overlay">
+  <div id="spotlight-panel">
+    <div id="spotlight-head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" stroke="var(--ink-soft)" stroke-width="2.4"/><path d="M15.5 15.5 21 21" stroke="var(--ink-soft)" stroke-width="2.4" stroke-linecap="round"/></svg>
+      <input id="spotlight-input" type="text" placeholder="Search windows and links…" autocomplete="off" spellcheck="false">
+      <span id="spotlight-hint">esc</span>
+    </div>
+    <div id="spotlight-results"></div>
+  </div>
+</div>
+
 <script>
 (function(){
   "use strict";
@@ -870,10 +1007,10 @@
   });
   $("#close-all").addEventListener("click", ()=> $all(".win.open").forEach(w=> closeWin(w.id.replace("win-",""))));
   $all(".menu-dropdown .row[data-close-active]").forEach(row=> row.addEventListener("click", ()=> closeWin(activeWin)));
-  $("#quit-row").addEventListener("click", ()=> showAlert("Nice try. This desktop never quits, it is a website, not an OS."));
+  $("#quit-row").addEventListener("click", ()=> showAlert(QUIT_MSG));
   $("#restart-row").addEventListener("click", ()=> showAlert("Restarting… (just kidding, keep looking around)"));
   $("#shutdown-row").addEventListener("click", ()=> showAlert("This computer is a website. It cannot be shut down."));
-  $("#spotlight").addEventListener("click", ()=> showAlert("Spotlight is on a coffee break. Try the desktop icons instead."));
+  $("#spotlight").addEventListener("click", openSpotlight);
   $("#reset-layout").addEventListener("click", resetLayout);
   $("#zoom-in").addEventListener("click", ()=> setZoom(zoomLevel+0.1));
   $("#zoom-out").addEventListener("click", ()=> setZoom(zoomLevel-0.1));
@@ -899,22 +1036,58 @@
   /* ---------- TRANSLATE ---------- */
   const translateBtn = $("#translate-btn");
   if(translateBtn){
+    const input = $("#translate-input");
+    const output = $("#translate-output");
+    const countEl = $("#translate-count");
+    const copyBtn = $("#translate-copy");
+
+    input.addEventListener("input", ()=>{ if(countEl) countEl.textContent = input.value.length+"/500"; });
+    input.addEventListener("keydown", e=>{
+      if(e.key==="Enter" && (e.metaKey || e.ctrlKey)){ e.preventDefault(); translateBtn.click(); }
+    });
+
+    if(copyBtn){
+      copyBtn.addEventListener("click", async ()=>{
+        const text = output.value;
+        if(!text) return;
+        let ok = false;
+        try{ await navigator.clipboard.writeText(text); ok = true; }
+        catch(err){
+          try{ output.focus(); output.select(); ok = document.execCommand("copy"); }catch(e2){ ok = false; }
+        }
+        const old = copyBtn.textContent;
+        copyBtn.textContent = ok ? "Kopieret!" : "Kunne ikke kopiere";
+        copyBtn.classList.add("tr-done");
+        setTimeout(()=>{ copyBtn.textContent = old; copyBtn.classList.remove("tr-done"); }, 1600);
+      });
+    }
+
     translateBtn.addEventListener("click", async ()=>{
-      const input = $("#translate-input");
-      const output = $("#translate-output");
       const text = input.value.trim();
       if(!text) return;
-      output.value = "Oversætter…";
+      output.value = "";
       translateBtn.disabled = true;
+      translateBtn.textContent = "Oversætter…";
       try{
         const res = await fetch("https://api.mymemory.translated.net/get?q=" + encodeURIComponent(text) + "&langpair=en|da");
-        const data = await res.json();
+        let data = null;
+        try{ data = await res.json(); }catch(err){ data = null; }
         const translated = data && data.responseData && data.responseData.translatedText;
-        output.value = translated ? translated : "Kunne ikke oversætte teksten lige nu.";
+        const status = String((data && data.responseStatus) || "");
+        if(res.status===429 || res.status===403 || status==="429" || status==="403"){
+          output.value = "Dagens gratis oversættelser hos MyMemory er brugt op. Prøv igen i morgen.";
+        }else if(!res.ok || !translated){
+          output.value = "Kunne ikke hente oversættelsen lige nu. Prøv igen om et øjeblik.";
+        }else if(/MYMEMORY WARNING|QUERY LENGTH LIMIT|INVALID SOURCE TEXT/i.test(translated)){
+          output.value = "Tjenesten afviste teksten. Prøv en kortere tekst, eller vent lidt og prøv igen.";
+        }else{
+          output.value = translated;
+        }
       }catch(err){
-        output.value = "Fejl: kunne ikke nå oversættelsestjenesten.";
+        output.value = "Fejl: kunne ikke kontakte oversættelsestjenesten. Tjek din forbindelse og prøv igen.";
       }finally{
         translateBtn.disabled = false;
+        translateBtn.textContent = "Oversæt";
       }
     });
   }
@@ -985,9 +1158,9 @@
       <div class="resize-handle"></div>
     `;
     $("#desktop").appendChild(win);
-    win.querySelector("[data-close]").addEventListener("click", ()=> closeWin(id));
-    win.querySelector("[data-min]").addEventListener("click", ()=> minimizeWin(id));
-    win.querySelector("[data-max]").addEventListener("click", ()=> maximizeWin(id));
+    $all("[data-close]", win).forEach(el=> el.addEventListener("click", e=>{ e.stopPropagation(); closeWin(id); }));
+    $all("[data-min]", win).forEach(el=> el.addEventListener("click", e=>{ e.stopPropagation(); minimizeWin(id); }));
+    $all("[data-max]", win).forEach(el=> el.addEventListener("click", e=>{ e.stopPropagation(); maximizeWin(id); }));
     win.addEventListener("mousedown", ()=> focusWin(id));
     makeDraggable(win);
     makeResizable(win);
@@ -1018,12 +1191,14 @@
     win.classList.remove("open");
     win.style.display = "none";
     minimized.delete(name);
+    refreshDock();
   }
   function minimizeWin(name){
     const win = $("#win-"+name);
     if(!win || !win.classList.contains("open")) return;
     win.style.display = "none";
     minimized.add(name);
+    refreshDock();
   }
   function maximizeWin(name){
     const win = $("#win-"+name);
@@ -1040,7 +1215,7 @@
       win.dataset.prevW = win.style.width;
       win.dataset.prevH = win.style.height;
       const pad = 12;
-      const bottomClear = 24;
+      const bottomClear = 56;
       win.style.left = pad+"px";
       win.style.top = (30+pad)+"px";
       win.style.width = "calc(100vw - "+(pad*2)+"px)";
@@ -1057,15 +1232,17 @@
     zTop += 1;
     win.style.zIndex = zTop;
     activeWin = name;
+    refreshDock();
   }
   function resetLayout(){
     $all(".win[data-x]").forEach(w=>{
-      w.style.left = w.dataset.x+"%";
-      w.style.top = w.dataset.y+"%";
-      w.style.width = "";
+      w.style.left = w.dataset.origLeft || (w.dataset.x+"%");
+      w.style.top = w.dataset.origTop || (w.dataset.y+"%");
+      w.style.width = w.dataset.origW || "";
       w.style.height = "";
       w.dataset.maxed = "";
     });
+    setZoom(1);
   }
 
   $all("[data-close]").forEach(el=> el.addEventListener("click", e=>{ e.stopPropagation(); closeWin(el.dataset.close); }));
@@ -1162,13 +1339,30 @@
   function makeDraggable(win){
     const bar = win.querySelector(".titlebar");
     let offX=0, offY=0, dragging=false;
+    function unmaxOnDrag(clientX, clientY){
+      if(win.dataset.maxed !== "1") return;
+      // dragging a maximized window pops it back to its original size first,
+      // keeping the cursor at the same relative spot, like a real OS
+      const r = win.getBoundingClientRect();
+      const fracX = Math.min(1, Math.max(0, (clientX - r.left)/Math.max(1, r.width)));
+      const fracY = Math.min(1, Math.max(0, (clientY - r.top)/Math.max(1, r.height)));
+      win.style.left = win.dataset.prevLeft;
+      win.style.top = win.dataset.prevTop;
+      win.style.width = win.dataset.prevW || "";
+      win.style.height = win.dataset.prevH || "";
+      win.dataset.maxed = "";
+      const r2 = win.getBoundingClientRect();
+      offX = r2.width * fracX;
+      offY = r2.height * fracY;
+    }
     bar.addEventListener("mousedown", e=>{
       if(e.target.classList.contains("box") || e.target.closest(".lights")) return;
+      // note: do NOT clear dataset.maxed here — a double-click must still see
+      // the maximized state so the second dblclick restores the original size
       dragging = true;
-      win.dataset.maxed = "";
       const rect = win.getBoundingClientRect();
       offX = e.clientX - rect.left; offY = e.clientY - rect.top;
-      win.style.left = rect.left+"px"; win.style.top = rect.top+"px";
+      win.style.left = rect.left/zoomLevel+"px"; win.style.top = rect.top/zoomLevel+"px";
       focusWin(win.id.replace("win-",""));
       e.preventDefault();
     });
@@ -1179,16 +1373,23 @@
       offX = t.clientX - rect.left; offY = t.clientY - rect.top;
       focusWin(win.id.replace("win-",""));
     }, {passive:true});
+    // double-click the titlebar toggles maximize, like a real OS
+    bar.addEventListener("dblclick", e=>{
+      if(e.target.classList.contains("box") || e.target.closest(".lights")) return;
+      maximizeWin(win.id.replace("win-",""));
+    });
     window.addEventListener("mousemove", e=>{
       if(!dragging) return;
-      win.style.left = Math.max(0, e.clientX-offX)+"px";
-      win.style.top = Math.max(30, e.clientY-offY)+"px";
+      unmaxOnDrag(e.clientX, e.clientY);
+      win.style.left = Math.max(0, e.clientX-offX)/zoomLevel+"px";
+      win.style.top = Math.max(30, e.clientY-offY)/zoomLevel+"px";
     });
     window.addEventListener("touchmove", e=>{
       if(!dragging) return;
       const t = e.touches[0];
-      win.style.left = Math.max(0, t.clientX-offX)+"px";
-      win.style.top = Math.max(30, t.clientY-offY)+"px";
+      unmaxOnDrag(t.clientX, t.clientY);
+      win.style.left = Math.max(0, t.clientX-offX)/zoomLevel+"px";
+      win.style.top = Math.max(30, t.clientY-offY)/zoomLevel+"px";
     }, {passive:true});
     window.addEventListener("mouseup", ()=> dragging=false);
     window.addEventListener("touchend", ()=> dragging=false);
@@ -1208,15 +1409,170 @@
     });
     window.addEventListener("mousemove", e=>{
       if(!resizing) return;
-      win.style.width = Math.max(240, startW + (e.clientX-startX))+"px";
-      win.style.height = Math.max(140, startH + (e.clientY-startY))+"px";
+      win.style.width = Math.max(240, (startW + (e.clientX-startX))/zoomLevel)+"px";
+      win.style.height = Math.max(140, (startH + (e.clientY-startY))/zoomLevel)+"px";
     });
     window.addEventListener("mouseup", ()=> resizing=false);
   }
   $all(".win").forEach(makeResizable);
 
+  /* ---------- DOCK ---------- */
+  const dock = $("#dock");
+  function refreshDock(){
+    dock.innerHTML = "";
+    $all(".win").forEach(w=>{
+      const name = w.id.replace("win-","");
+      // skip utility dialogs; only real windows belong in the dock
+      if(name==="alert" || name==="newtext" || name==="warning") return;
+      const isOpen = w.classList.contains("open") || minimized.has(name);
+      if(!isOpen) return;
+      const titleEl = w.querySelector(".title");
+      const title = titleEl ? titleEl.textContent : name;
+      const item = document.createElement("div");
+      item.className = "dock-item"
+        + (name===activeWin && !minimized.has(name) ? " active" : "")
+        + (minimized.has(name) ? " minned" : "");
+      item.innerHTML = '<span class="dock-dot"></span><span class="dock-label">'+escapeHtml(title)+'</span>';
+      item.title = minimized.has(name) ? title+" (minimized) - click to restore" : title+" - click to focus, click again to minimize";
+      item.addEventListener("click", ()=>{
+        if(minimized.has(name)){ openWin(name); }
+        else if(name===activeWin){ minimizeWin(name); }
+        else{ focusWin(name); }
+      });
+      dock.appendChild(item);
+    });
+  }
+
+  /* ---------- SPOTLIGHT ---------- */
+  const spotOverlay = $("#spotlight-overlay");
+  const spotInput = $("#spotlight-input");
+  const spotResults = $("#spotlight-results");
+  let spotList = [];
+  let spotCurrent = [];
+  let spotSel = 0;
+
+  function spotBuild(){
+    spotList = [];
+    $all(".win").forEach(w=>{
+      const name = w.id.replace("win-","");
+      if(name==="alert" || name==="newtext" || name==="warning") return;
+      const titleEl = w.querySelector(".title");
+      spotList.push({ kind:"Window", label:(titleEl ? titleEl.textContent : name), run:()=> openWin(name) });
+    });
+    $all("#win-links a.link-row").forEach(a=>{
+      const nm = a.querySelector(".link-name");
+      const hd = a.querySelector(".link-handle");
+      const label = (nm ? nm.textContent : "Link") + (hd ? " - "+hd.textContent : "");
+      const href = a.href;
+      spotList.push({ kind:"Link", label:label, run:()=> window.open(href, "_blank", "noopener") });
+    });
+  }
+  function openSpotlight(){
+    spotBuild();
+    spotOverlay.classList.add("open");
+    spotInput.value = "";
+    spotRender();
+    setTimeout(()=> spotInput.focus(), 0);
+  }
+  function closeSpotlight(){
+    spotOverlay.classList.remove("open");
+    spotInput.blur();
+  }
+  function spotDrawSel(){
+    $all(".spot-row", spotResults).forEach((r, i)=> r.classList.toggle("sel", i===spotSel));
+  }
+  function spotRun(it){ closeSpotlight(); it.run(); }
+  function spotRender(){
+    const q = spotInput.value.trim().toLowerCase();
+    let list = q ? spotList.filter(it=> it.label.toLowerCase().includes(q)) : spotList;
+    list = list.slice(0, 12);
+    spotCurrent = list;
+    spotSel = 0;
+    spotResults.classList.add("has");
+    spotResults.innerHTML = "";
+    if(list.length===0){
+      spotResults.innerHTML = '<div class="spot-empty">No matches. Try "projects" or "github".</div>';
+      return;
+    }
+    list.forEach((it, i)=>{
+      const row = document.createElement("div");
+      row.className = "spot-row";
+      row.innerHTML = '<span class="spot-label">'+escapeHtml(it.label)+'</span><span class="spot-kind">'+it.kind+'</span>';
+      row.addEventListener("mouseenter", ()=>{ spotSel = i; spotDrawSel(); });
+      row.addEventListener("click", ()=> spotRun(it));
+      spotResults.appendChild(row);
+    });
+    spotDrawSel();
+  }
+  spotInput.addEventListener("input", spotRender);
+  spotInput.addEventListener("keydown", e=>{
+    if(e.key==="ArrowDown"){
+      e.preventDefault();
+      if(spotCurrent.length){ spotSel = (spotSel+1)%spotCurrent.length; spotDrawSel(); }
+    }else if(e.key==="ArrowUp"){
+      e.preventDefault();
+      if(spotCurrent.length){ spotSel = (spotSel-1+spotCurrent.length)%spotCurrent.length; spotDrawSel(); }
+    }else if(e.key==="Enter"){
+      if(spotCurrent[spotSel]) spotRun(spotCurrent[spotSel]);
+    }else if(e.key==="Escape"){
+      closeSpotlight();
+    }
+  });
+  spotOverlay.addEventListener("mousedown", e=>{ if(e.target===spotOverlay) closeSpotlight(); });
+
+  /* ---------- KEYBOARD SHORTCUTS ----------
+     Menu labels show plain keys (T, W, +, -, 0) because the browser eats
+     Cmd/Ctrl+T, W and Q before the page ever sees them. The modifier combos
+     are still handled here as best-effort aliases where the browser passes
+     them through (and Cmd/Ctrl+K opens Spotlight, which no browser reserves). */
+  const QUIT_MSG = "Nice try. This desktop never quits, it is a website, not an OS.";
+  function openTextDialog(){
+    openWin("newtext");
+    setTimeout(()=>{ const el = $("#newtext-title"); if(el) el.focus(); }, 0);
+  }
+  document.addEventListener("keydown", e=>{
+    const targ = e.target;
+    const typing = !!(targ && (targ.tagName==="INPUT" || targ.tagName==="TEXTAREA" || targ.isContentEditable));
+
+    // modifier combos: Cmd/Ctrl (+ optional shift) variants
+    if(e.metaKey || e.ctrlKey){
+      const k = e.key.toLowerCase();
+      if(k==="t"){ e.preventDefault(); openTextDialog(); }
+      else if(k==="w"){ e.preventDefault(); if(!typing) closeWin(activeWin); }
+      else if(k==="k"){ e.preventDefault(); if(!spotOverlay.classList.contains("open")) openSpotlight(); }
+      else if(e.key==="+" || e.key==="="){ e.preventDefault(); setZoom(zoomLevel+0.1); }
+      else if(e.key==="-" || e.key==="_"){ e.preventDefault(); setZoom(zoomLevel-0.1); }
+      else if(e.key==="0"){ e.preventDefault(); setZoom(1); }
+      return;
+    }
+
+    if(e.key==="Escape"){
+      $all(".menu-item.open").forEach(m=> m.classList.remove("open"));
+      if(spotOverlay.classList.contains("open")){ closeSpotlight(); return; }
+      if(typing) return;
+      // Escape closes open dialogs, like a real OS alert
+      $all(".win.dialog.open").forEach(w=> closeWin(w.id.replace("win-","")));
+      return;
+    }
+
+    if(typing || e.altKey || e.key.length!==1) return;
+    switch(e.key){
+      case "t": case "T": openTextDialog(); break;
+      case "w": case "W": closeWin(activeWin); break;
+      case "+": case "=": setZoom(zoomLevel+0.1); break;
+      case "-": case "_": setZoom(zoomLevel-0.1); break;
+      case "0": setZoom(1); break;
+    }
+  });
+
   /* ---------- INIT ---------- */
   focusWin("about");
+  // remember each window's original inline position/width so Reset Layout restores them
+  $all(".win[data-x]").forEach(w=>{
+    w.dataset.origLeft = w.style.left;
+    w.dataset.origTop = w.style.top;
+    w.dataset.origW = w.style.width;
+  });
 
   /* ---------- DEEP LINKING (e.g. index.html#cv opens the CV window) ---------- */
   function openFromHash(){
